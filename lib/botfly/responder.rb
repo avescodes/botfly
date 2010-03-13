@@ -1,5 +1,3 @@
-require 'forwardable'
-
 module Botfly
   class Responder
     attr_reader :callback, :callback_type
@@ -7,7 +5,7 @@ module Botfly
     def initialize(client,bot)
       Botfly.logger.info("    RSP: Responder#new")
       @matcher_chain = []
-      @parent_bot = bot
+      @bot = bot
       @client = client
     end
     
@@ -29,8 +27,9 @@ module Botfly
     end
     
     def callback_with(params)
-      @p=params
       Botfly.logger.debug("    RSP: Launching callback with params: #{params.inspect}")
+
+      @p=params # TODO: set sensible instance variables
       if @matcher_chain.all? {|matcher| matcher.match(params) }
         Botfly.logger.debug("      RSP: All matchers passed")
         cb = @callback # Ruby makes it difficult to apply & to an instance variable
@@ -38,8 +37,10 @@ module Botfly
       end
     end
     
+    # TODO: Set sensible callable methods
     def send(nick,msg) #delegate this to the object
       Botfly.logger.debug("    RSP: Sending message to #{nick}: #{msg}")
+      
       m=Jabber::Message.new(nick,msg)
       m.type = :chat
       @client.send(m)
@@ -50,18 +51,24 @@ module Botfly
     def add_matcher(method, condition)
       klass = Botfly.const_get(method.to_s.capitalize + "Matcher")
       @matcher_chain << klass.new(condition)
+      
       Botfly.logger.debug("    RSP: Adding to matcher chain: #{@matcher_chain.inspect}")
     end
     
+    # TODO: Check callback is in acceptable list - MUC subclass can override this list
     def register_with_bot(callback_type)
-      # TODO: Check callback is in acceptable list - MUC subclass can override this list
       Botfly.logger.debug("    RSP: Registering :#{callback_type} responder with bot")
+      
       @callback_type = callback_type
-      if [:message, :presence].include? @callback_type
-        @parent_bot.add_responder_of_type(@callback_type,self)
+      if valid_callbacks.include? @callback_type
+        @bot.add_responder_of_type(@callback_type,self)
       else
         raise NoMethodError.new("undefined method '#{m}' for #{inspect}:#{self.class}")
       end
+    end
+    
+    def valid_callbacks
+      [:message, :presence]
     end
   end
 end

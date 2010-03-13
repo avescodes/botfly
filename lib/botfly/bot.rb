@@ -1,7 +1,5 @@
 require 'rubygems'
 
-#Jabber::debug = true
-
 module Botfly
   class Bot
     attr_reader :responders, :client
