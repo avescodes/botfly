@@ -2,21 +2,18 @@ module Botfly
   class Responder
     attr_reader :callback, :callback_type
     
-    def initialize(client,bot)
+    def initialize(client,bot,&block)
       Botfly.logger.info("    RSP: #{self.class.to_s}#new")
       @matcher_chain = []
       @bot = bot
       @client = client
+      @callback = block if block_given?
     end
     
     def method_missing(method,condition=nil,&block)
       Botfly.logger.info("    RSP: Responder##{method}(#{condition.inspect})")
       
-      if condition  # method is matcher name
-        add_matcher(method,condition)
-      else          # method is callback name      
-        register_with_bot(method)
-      end
+      add_matcher(method,condition)
       
       if block_given?
         Botfly.logger.info("    RSP: Callback recorded: #{block.inspect}")
@@ -29,7 +26,7 @@ module Botfly
     def callback_with(params)
       Botfly.logger.debug("    RSP: Launching callback with params: #{params.inspect}")
 
-      #setup_instance_variables(params)
+      setup_instance_variables(params)
       if @matcher_chain.all? {|matcher| matcher.match(params) }
         Botfly.logger.debug("      RSP: All matchers passed")
         cb = @callback # Ruby makes it difficult to apply & to an instance variable
@@ -57,20 +54,9 @@ module Botfly
     
     # TODO: Check callback is in acceptable list - MUC subclass can override this list
     def register_with_bot(callback_type)
-      Botfly.logger.debug("    RSP: Registering :#{callback_type} responder with bot")
-      
-      @callback_type = callback_type
-      if valid_callbacks.include? @callback_type
-        @bot.add_responder_of_type(@callback_type,self)
-      else
-        raise NoMethodError.new("undefined method '#{m}' for #{inspect}:#{self.class}")
-      end
-    end
-    
-    def valid_callbacks
-      [:message, :presence]
-    end
-    
+      raise "AbstractMethodError: You must implement this method in a concrete subclass"
+    end      
+
     def setup_instance_variables(params)
       raise "AbstractMethodError: You must implement this method in a concrete subclass"
     end

@@ -13,6 +13,7 @@ bot = Botfly.login(config["jid"],config["pass"]) do
     Botfly.logger.info("Callback called")
     reply("ummmm, no")
   end
+  on(:presence) { puts self }
   connect
 end
 Thread.stop

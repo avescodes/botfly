@@ -1,5 +1,5 @@
 module Botfly
-  class MessageResponder < Responder
+  class MessageResponder < Responder    
     def setup_instance_variables(params)
       Botfly.logger.debug("    RSP: MessageResponder setting up instance variables")
     end

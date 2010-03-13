@@ -11,11 +11,11 @@ module Botfly
       @responders = {}
     end
   
-    def on(type)
+    def on(type, &block)
       Botfly.logger.info("  BOT: Bot#on")
       klass = Botfly.const_get(type.to_s.capitalize + "Responder")
-      
-      responder = klass.new(@client, self)
+      (@responders[type] ||= []) << responder = klass.new(@client, self, &block)
+      Botfly.logger.info("  BOT: #{type.to_s.capitalize}Responder added to responder chain")
       return responder
     end
     
@@ -27,12 +27,6 @@ module Botfly
       register_for_xmpp_callbacks
       @client.send(Jabber::Presence.new.set_status("Carrier has arrived"))
       #Thread.stop
-    end
-    
-    def add_responder_of_type(type, responder)
-      Botfly.logger.debug("  BOT: Added responder of type #{type.inspect}")
-      @responders[type] ||= [] 
-      @responders[type] << responder
     end
       
   private
