@@ -4,52 +4,55 @@ module Botfly
   class Bot
     attr_reader :responders, :client
     def initialize(jid,pass)
-      Botfly.logger.info("Bot#new")
+      Botfly.logger.info("  BOT: Bot#new")
       @password = pass
       @jid = Jabber::JID.new(jid)
       @client = Jabber::Client.new(@jid)
+      @responders = {}
     end
   
     def on
-      Botfly.logger.info("Bot#on")
+      Botfly.logger.info("  BOT: Bot#on")
       responder = Botfly::Responder.new(@client, self)
       return responder
     end
     
     def connect
-      Botfly.logger.info("Connecting to #{@jid}...")
+      Botfly.logger.info("  BOT: Connecting to #{@jid}...")
       @client.connect
       @client.auth(@password)
-      Botfly.logger.info("Connected")
+      Botfly.logger.info("  BOT: Connected")
       register_for_xmpp_callbacks
-      
       @client.send(Jabber::Presence.new.set_status("Carrier has arrived"))
       #Thread.stop
     end
     
     def add_responder_of_type(type, responder)
-      (@responders[type] ||= []) << responder
+      Botfly.logger.debug("  BOT: Added responder of type #{type.inspect}")
+      @responders[type] ||= [] 
+      @responders[type] << responder
+    end
       
   private
 
     def register_for_xmpp_callbacks
-      Botfly.logger.info("Registering for callbacks with client")
+      Botfly.logger.info("  BOT: Registering for callbacks with client")
 #      @client.add_update_callback {|presence| respond_to(:update, :presence => presence) }
       @client.add_message_callback do |msg| 
-        Botfly.logger.debug("Got message - #{msg.inspect}") 
+        Botfly.logger.debug("  BOT: Got Message - #{msg.inspect}") 
         respond_to(:message, :message => message)
       end
       @client.add_presence_callback do |old_presence,new_presence| 
-        Botfly.logger.debug("Got Presence")
+        Botfly.logger.debug("  BOT: Got Presence - #{new_presence}")
         respond_to(:presence, :old => old_presence, :new => new_presence)
       end
       #      @client.add_subscription_request_callback {|item, pres| } # requires Roster helper
     end
     
-    def respond_to(callback, params)
-      Botfly.logger.info("Responding to callback of type: #{callback}")
+    def respond_to(callback_type, params)
+      Botfly.logger.info("  BOT: Responding to callback of type: #{callback}")
       responders = params[:muc] ? @muc_responders[params[:muc]] : @responders
-      responders[type].each {|r| r.callback_with params}
+      responders[callback_type].each {|r| r.callback_with params}
     end
     
 #    def register_for_muc_callbacks(client)

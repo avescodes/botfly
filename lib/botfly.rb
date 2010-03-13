@@ -5,6 +5,8 @@ require 'xmpp4r/muc'
 
 require 'botfly/bot'
 require 'botfly/responder'
+require 'botfly/matcher'
+
 require 'logger'
 
 module Botfly
@@ -13,7 +15,7 @@ module Botfly
   end
   def Botfly.login(jid,pass,logfile=STDOUT,&block)
     @logfile = logfile
-    Botfly.logger.info("Botfly#login")
+    Botfly.logger.info("BOTFLY: #login")
     bot = Botfly::Bot.new(jid,pass)
     bot.instance_eval(&block)
     return bot # At this point doesn't get returned, as the thread is stopped
