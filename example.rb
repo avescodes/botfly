@@ -11,7 +11,7 @@ puts config.inspect
 bot = Botfly.login(config["jid"],config["pass"]) do
   on.message.nick(/rkneufeld/) do
     Botfly.logger.info("Callback called")
-    send()
+    reply("ummmm, no")
   end
   connect
 end

@@ -3,8 +3,8 @@ require 'rubygems'
 require 'xmpp4r'
 require 'xmpp4r/muc'
 
-require 'botfly/bot'
 require 'botfly/responder'
+require 'botfly/bot'
 require 'botfly/matcher'
 
 require 'logger'
