@@ -29,7 +29,7 @@ module Botfly
     def callback_with(params)
       Botfly.logger.debug("    RSP: Launching callback with params: #{params.inspect}")
 
-      setup_instance_variables(params)
+      #setup_instance_variables(params)
       if @matcher_chain.all? {|matcher| matcher.match(params) }
         Botfly.logger.debug("      RSP: All matchers passed")
         cb = @callback # Ruby makes it difficult to apply & to an instance variable

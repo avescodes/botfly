@@ -5,6 +5,7 @@ module Botfly
     end
     
     def reply(msg)
+      Botfly.logger.debug("    RSP: MessageResponder#reply called")
       msg = Jabber::Message.new(params[:message].from, msg)
       msg.type = :chat
       @client.send(msg)
