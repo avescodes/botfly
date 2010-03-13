@@ -1,6 +1,5 @@
 require 'forwardable'
 
-#if @matcher_chain.all? {|matcher| matcher.match }
 module Botfly
   class Responder
     attr_reader :callback, :callback_type
@@ -31,13 +30,17 @@ module Botfly
     
     def callback_with(params)
       @p=params
-      Botfly.logger.debug("    RSP: Launching callback with params: #{params}")
-      instance_eval @callback
+      Botfly.logger.debug("    RSP: Launching callback with params: #{params.inspect}")
+      if @matcher_chain.all? {|matcher| matcher.match(params) }
+        self.instance_eval @callback
+      end
     end
     
     def send(nick,msg) #delegate this to the object
       Botfly.logger.debug("    RSP: Sending message to #{nick}: #{msg}")
-      @client.send(Jabber::Message.new(nick,msg))
+      m=Jabber::Message.new(nick,msg)
+      m.type = :chat
+      @client.send(m)
     end
     # TODO: add other @client actions as delegates    
 

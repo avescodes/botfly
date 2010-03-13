@@ -1,5 +1,7 @@
 require 'rubygems'
 
+Jabber::debug = true
+
 module Botfly
   class Bot
     attr_reader :responders, :client
@@ -37,22 +39,23 @@ module Botfly
 
     def register_for_xmpp_callbacks
       Botfly.logger.info("  BOT: Registering for callbacks with client")
-#      @client.add_update_callback {|presence| respond_to(:update, :presence => presence) }
-      @client.add_message_callback do |msg| 
-        Botfly.logger.debug("  BOT: Got Message - #{msg.inspect}") 
+#     @client.add_update_callback {|presence| respond_to(:update, :presence => presence) }
+#     @client.add_subscription_request_callback {|item, pres| } # requires Roster helper
+      @client.add_message_callback do |message| 
+        Botfly.logger.debug("    CB: Got Message") 
         respond_to(:message, :message => message)
       end
       @client.add_presence_callback do |old_presence,new_presence| 
-        Botfly.logger.debug("  BOT: Got Presence - #{new_presence}")
+        Botfly.logger.debug("    CB: Got Presence")
         respond_to(:presence, :old => old_presence, :new => new_presence)
       end
-      #      @client.add_subscription_request_callback {|item, pres| } # requires Roster helper
+
     end
     
     def respond_to(callback_type, params)
-      Botfly.logger.info("  BOT: Responding to callback of type: #{callback}")
+      Botfly.logger.info("  BOT: Responding to callback of type: #{callback_type}")
       responders = params[:muc] ? @muc_responders[params[:muc]] : @responders
-      responders[callback_type].each {|r| r.callback_with params}
+      responders[callback_type].each {|r| r.callback_with params} if responders[callback_type]
     end
     
 #    def register_for_muc_callbacks(client)

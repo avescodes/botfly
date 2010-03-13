@@ -11,7 +11,9 @@ require 'logger'
 
 module Botfly
   def Botfly.logger
-    return @logger || @logger = Logger.new(@logfile)
+    @logger = Logger.new(@logfile)
+    #@logger.sev_threshold = Logger::WARN
+    return @logger
   end
   def Botfly.login(jid,pass,logfile=STDOUT,&block)
     @logfile = logfile

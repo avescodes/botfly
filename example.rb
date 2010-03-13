@@ -8,8 +8,9 @@ require 'yaml'
 config = { "jid" => "mucker@limun.org/bot", "pass" => "CD.mucker" }
 bot = Botfly.login(config["jid"],config["pass"]) do
   on.message.nick(/rkneufeld/) do
-    say("You don't say!")
+    Botfly.logger.info("Callback called")
   end
   connect
 end
-#loop {}
+Thread.stop
+loop{}
