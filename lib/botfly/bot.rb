@@ -5,14 +5,19 @@ pass = 'CD.mucker'
 
 module Botfly
   class Bot
+    attr_reader :responders
     def initialize(jid,pass)
+      Botfly.logger.debug("Bot#new")
       @jid = Jabber::JID.new(jid)
       @password = pass
       @client = Jabber::Client.new(@jid)
     end
   
     def on
-      Botfly::Responder.new
+      Botfly.logger.debug("Bot#on")
+      responder = Botfly::Responder.new
+      (@responders ||= []) << responder
+      return responder
     end
     
   private

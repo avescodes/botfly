@@ -2,8 +2,8 @@ require 'botfly/matcher'
 
 module Botfly
   class NickMatcher < Matcher
-    def match(actual)
-      return actual =~ @condition
+    def match(params)
+      return params[:nick] =~ @condition
     end
   end
 end
