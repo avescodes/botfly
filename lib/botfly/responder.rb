@@ -1,10 +1,17 @@
+require 'forwardable'
+
 #if @matcher_chain.all? {|matcher| matcher.match }
 module Botfly
   class Responder
-    def initialize
+    attr_reader :callback, :type
+    
+    def initialize(client,bot)
       Botfly.logger.debug("Responder#new")
       @matcher_chain = []
+      @parent_bot = bot
+      @client = client
     end
+    
     def method_missing(method,condition=nil,&block)
       Botfly.logger.debug("Responder##{method}(#{condition.inspect})")
       if condition  # method is matcher name
@@ -21,5 +28,18 @@ module Botfly
       end
       return self
     end
+    
+    def callback_with(params)
+      @p=params
+      Botfly.logger.debug("Launching callback")
+      instance_eval @callback
+    end
+    
+    def say(msg) #delegate this to the object
+      @client.say(msg)
+    end
+    
+    # TODO: add other @client actions as delegates
+      
   end
 end

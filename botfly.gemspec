@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{botfly}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ryan Neufeld"]
@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "botfly.gemspec",
      "lib/botfly.rb",
      "lib/botfly/bot.rb",
      "lib/botfly/matcher.rb",

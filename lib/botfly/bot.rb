@@ -15,52 +15,46 @@ module Botfly
   
     def on
       Botfly.logger.debug("Bot#on")
-      responder = Botfly::Responder.new
+      responder = Botfly::Responder.new(@client, self)
       (@responders ||= []) << responder
       return responder
     end
     
-  private
-
     def connect
+      Botfly.logger.debug("Connecting...")
+      register_for_xmpp_callbacks
       @client.connect
       @client.auth(@password)
+      Botfly.logger.debug("Connected.")
+      Thread.stop
     end
-  
-    def join_room(room, as="#{@client.jid.node}", server="#{room}@conference.#{@client.jid.domain}")
-      jid = [server,as].join('/')
-      muc = Jabber::MUC::SimpleMUCClient.new(@client)
-
-      register_for_muc_callbacks(muc)
-
-      muc.join(Jabber::JID.new(jid))
-    end
-    
+      
   private
 
-    def register_for_muc_callbacks(client)
-      params = {:muc => client}
-      client.on_join {|time,nick| respond_to(:join, params.merge!(:time=>time,:nick=>nick))}
-      client.on_leave {|time,nick| respond_to(:leave, params.merge!(:time=>time,:nick=>nick))}
-      client.on_message {|time,nick,text| respond_to(:message, params.merge!(:time=>time,:nick=>nick,:text=>text))}
-      client.on_private_message {|time,nick,text| respond_to(:private_message,    params.merge!(:time=>time,:nick=>nick,:text=>text))}
-      client.on_room_message {|time,text| respond_to(:room_message, params.merge!(:time => time, :text => text))}
-      client.on_self_leave {|time| respond_to(:self_leave, params.merge!(:time => time)) }
-      client.on_subject {|time,nick,subject| respond_to(:subject, params.merge!(:time => time, :nick => nickname, :subject => subject))}
+    def register_for_xmpp_callbacks
+      Botfly.logger.debug("Registering for callbacks with @client")
+#      @client.add_update_callback {|presence| respond_to(:update, :presence => presence) }
+      @client.add_message_callback {|msg| respond_to(:message, :message => message) }
+      @client.add_presence_callback {|old_presence,new_presence| respond_to(:presence, :old => old_presence, :new => new_presence) }
+      #      @client.add_subscription_request_callback {|item, pres| } # requires Roster helper
     end
     
     def respond_to(callback, params)
+      Botfly.logger.debug("Responding to callback of type: #{callback}")
       responders = params[:muc] ? @muc_responders[params[:muc]] : @responders
-      responders[params[callback]].each {|r| r.respond_to params}
+      responders.reject {|r| r.type != callback}.each {|r| r.callback_with params}
     end
     
-    #as("someone").join("someplace") do #constructs a client context - basically setting the params[:muc] for whatever responder... (maybe an entire object context for the block? - yeah i'll have to)
-    #  on(:leave).nick(/Guy/).time("<syntax>") do # construct a responder object,
-                                                  # whose block operates in it's context
-    #    # operates 
-    #  end # the responder is also capapble of telling if it should execute it's block
-           # A consequence of the block operating in the responder's context is it allows class & isntance variables to exist and persist
-    #end
+#    def register_for_muc_callbacks(client)
+#      params = {:muc => client}
+##      client.on_join {|time,nick| respond_to(:join, params.merge!(:time=>time,:nick=>nick))}
+#      client.on_leave {|time,nick| respond_to(:leave, params.merge!(:time=>time,:nick=>nick))}
+#      client.on_message {|time,nick,text| respond_to(:message, params.merge!(:time=>time,:nick=>nick,:text=>text))}
+#      client.on_private_message {|time,nick,text| respond_to(:private_message,    params.merge!(:time=>time,:nick=>nick,:text=>text))}
+#      client.on_room_message {|time,text| respond_to(:room_message, params.merge!(:time => time, :text => text))}
+#      client.on_self_leave {|time| respond_to(:self_leave, params.merge!(:time => time)) }
+#      client.on_subject {|time,nick,subject| respond_to(:subject, params.merge!(:time => time, :nick => nickname, :subject => subject))}
+#    end    
         
   end
 end
