@@ -1,7 +1,7 @@
 module Botfly
   class Matcher
     def initialize(condition)
-      Botfly.logger.debug("Creating Matcher")
+      Botfly.logger.info("Creating Matcher")
       @condition = condition
     end
     def match(params)

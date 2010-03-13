@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "botfly.gemspec",
+     "example.rb",
      "lib/botfly.rb",
      "lib/botfly/bot.rb",
      "lib/botfly/matcher.rb",
@@ -37,7 +38,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/rkneufeld/botfly}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.5}
   s.summary = %q{A quick and easy DSL for generating Jabber bots}
   s.test_files = [
     "spec/botfly_spec.rb",

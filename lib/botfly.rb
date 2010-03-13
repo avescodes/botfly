@@ -9,13 +9,13 @@ require 'logger'
 
 module Botfly
   def Botfly.logger
-    return @logger || @logger=Logger.new(STDOUT)
+    return @logger || @logger = Logger.new(@logfile)
   end
-  def Botfly.login(jid,pass,&block)
-    Botfly.logger.debug("Botfly#login")
+  def Botfly.login(jid,pass,logfile=STDOUT,&block)
+    @logfile = logfile
+    Botfly.logger.info("Botfly#login")
     bot = Botfly::Bot.new(jid,pass)
     bot.instance_eval(&block)
-    Botfly.logger.debug("Done Botfly#login")
-    return bot
+    return bot # At this point doesn't get returned, as the thread is stopped
   end
 end
