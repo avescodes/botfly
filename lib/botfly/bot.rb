@@ -13,7 +13,6 @@ module Botfly
     def on
       Botfly.logger.info("Bot#on")
       responder = Botfly::Responder.new(@client, self)
-      (@responders ||= []) << responder
       return responder
     end
     
@@ -27,6 +26,9 @@ module Botfly
       @client.send(Jabber::Presence.new.set_status("Carrier has arrived"))
       #Thread.stop
     end
+    
+    def add_responder_of_type(type, responder)
+      (@responders[type] ||= []) << responder
       
   private
 
@@ -47,7 +49,7 @@ module Botfly
     def respond_to(callback, params)
       Botfly.logger.info("Responding to callback of type: #{callback}")
       responders = params[:muc] ? @muc_responders[params[:muc]] : @responders
-      responders.reject {|r| r.type != callback}.each {|r| r.callback_with params}
+      responders[type].each {|r| r.callback_with params}
     end
     
 #    def register_for_muc_callbacks(client)

@@ -21,7 +21,7 @@ module Botfly
         #could rescue NameError, but this way we raise that it doesn't exist
       else          # method is callback name      
         # TODO: Check callback is in acceptable list - MUC subclass can override this list
-        @type = method.to_sym
+        @parent_bot.add_responder_of_type(method,self)
       end
       if block_given? && @type
         Botfly.logger.info("Callback recorded")
