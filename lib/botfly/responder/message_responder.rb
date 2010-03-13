@@ -9,4 +9,5 @@ module Botfly
       msg.type = :chat
       @client.send(msg)
     end
+  end
 end

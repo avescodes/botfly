@@ -3,7 +3,7 @@ module Botfly
     attr_reader :callback, :callback_type
     
     def initialize(client,bot)
-      Botfly.logger.info("    RSP: Responder#new")
+      Botfly.logger.info("    RSP: #{self.class.to_s}#new")
       @matcher_chain = []
       @bot = bot
       @client = client
@@ -73,5 +73,6 @@ module Botfly
     
     def setup_instance_variables(params)
       raise "AbstractMethodError: You must implement this method in a concrete subclass"
+    end
   end
 end

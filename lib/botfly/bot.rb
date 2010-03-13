@@ -11,9 +11,11 @@ module Botfly
       @responders = {}
     end
   
-    def on
+    def on(type)
       Botfly.logger.info("  BOT: Bot#on")
-      responder = Botfly::Responder.new(@client, self)
+      klass = Botfly.const_get(type.to_s.capitalize + "Responder")
+      
+      responder = klass.new(@client, self)
       return responder
     end
     
