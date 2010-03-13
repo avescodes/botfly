@@ -1,6 +1,6 @@
 require 'rubygems'
 
-Jabber::debug = true
+#Jabber::debug = true
 
 module Botfly
   class Bot

@@ -20,8 +20,8 @@ module Botfly
         register_with_bot(method)
       end
       
-      if block_given? && @type
-        Botfly.logger.info("    RSP: Callback recorded")
+      if block_given?
+        Botfly.logger.info("    RSP: Callback recorded: #{block.inspect}")
         @callback = block 
       end
       
@@ -32,7 +32,9 @@ module Botfly
       @p=params
       Botfly.logger.debug("    RSP: Launching callback with params: #{params.inspect}")
       if @matcher_chain.all? {|matcher| matcher.match(params) }
-        self.instance_eval @callback
+        Botfly.logger.debug("      RSP: All matchers passed")
+        cb = @callback # Ruby makes it difficult to apply & to an instance variable
+        instance_eval &cb
       end
     end
     
@@ -54,8 +56,9 @@ module Botfly
     def register_with_bot(callback_type)
       # TODO: Check callback is in acceptable list - MUC subclass can override this list
       Botfly.logger.debug("    RSP: Registering :#{callback_type} responder with bot")
-      if [:message, :presence].include? callback_type
-        @parent_bot.add_responder_of_type(callback_type,self)
+      @callback_type = callback_type
+      if [:message, :presence].include? @callback_type
+        @parent_bot.add_responder_of_type(@callback_type,self)
       else
         raise NoMethodError.new("undefined method '#{m}' for #{inspect}:#{self.class}")
       end
