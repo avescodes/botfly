@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{botfly}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ryan Neufeld"]
   s.date = %q{2010-03-13}
-  s.description = %q{Botfly is a Jabber Bot framework that lets you write Jabber bots in a modern DSL that just makes sense. Enjoy, while it's still fresh and VERY ALPHA.}
+  s.description = %q{Botfly is a Jabber Bot DSL that lets you write bots with ease. Enjoy, while it's still fresh and VERY ALPHA.}
   s.email = %q{ryan@ryanneufeld.ca}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/rkneufeld/botfly}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{A quick and easy DSL for generating Jabber bots}
   s.test_files = [
     "spec/botfly_spec.rb",
