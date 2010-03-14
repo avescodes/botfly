@@ -2,7 +2,7 @@ require 'rubygems'
 
 module Botfly
   class Bot
-    attr_reader :responders, :client
+    attr_accessor :responders, :client
     def initialize(jid,pass)
       Botfly.logger.info("  BOT: Bot#new")
       @password = pass
@@ -22,12 +22,20 @@ module Botfly
       #Thread.stop
     end
     
-    def on(type, &block)
-      Botfly.logger.info("  BOT: Bot#on")
-      klass = Botfly.const_get(type.to_s.capitalize + "Responder")
-      (@responders[type] ||= []) << responder = klass.new(@client, self, &block)
-      Botfly.logger.info("  BOT: #{type.to_s.capitalize}Responder added to responder chain")
-      return responder
+    class OnRecognizer
+      def initialize(obj); @obj = obj; end
+
+      def method_missing(type,&block)
+        Botfly.logger.info("  BOT: Bot#on")
+        klass = Botfly.const_get(type.to_s.capitalize + "Responder")
+        (@obj.responders[type] ||= []) << responder = klass.new(@obj.client, @obj, &block)
+        Botfly.logger.info("  BOT: #{type.to_s.capitalize}Responder added to responder chain")
+        return responder
+      end
+    end
+    
+    def on
+      return OnRecognizer.new(self)
     end
       
     def quit

@@ -18,7 +18,8 @@ module Botfly
     @logfile = logfile
     Botfly.logger.info("BOTFLY: #login")
     bot = Botfly::Bot.new(jid,pass)
-    bot.instance_eval(&block)
+    bot.instance_exec(&block)
+    bot.instance_exec{connect}
     return bot # At this point doesn't get returned, as the thread is stopped
   end
 end
