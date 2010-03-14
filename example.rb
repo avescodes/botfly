@@ -6,7 +6,7 @@ require 'yaml'
 config = YAML::load(ARGF.read) if ARGF
 puts config.inspect
 
-Jabber::debug = true
+Jabber::debug = false
 
 bot = Botfly.login(config["jid"],config["pass"]) do
   on(:message).body(/^exit$/) { reply "Goodbye!"; quit }
