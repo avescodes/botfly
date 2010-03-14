@@ -11,7 +11,9 @@ Jabber::debug = true
 bot = Botfly.login(config["jid"],config["pass"]) do
   on(:message).nick(/rkneufeld/) do
     Botfly.logger.info("Callback called")
-    reply("ummmm, no")
+    @count ||= 0
+    @count += 1
+    reply("That's the #{@count}th message I've received.")
   end
   on(:presence) { puts self }
   connect
