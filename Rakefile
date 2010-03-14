@@ -6,7 +6,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "botfly"
     gem.summary = %Q{A quick and easy DSL for generating Jabber bots}
-    gem.description = %Q{Botfly lets you write Jabber bots in a modern DSL that just makes sense. Enjoy}
+    gem.description = %Q{Botfly is a Jabber Bot framework that lets you write Jabber bots in a modern DSL that just makes sense. Enjoy, while it's still fresh and VERY ALPHA.}
     gem.email = "ryan@ryanneufeld.ca"
     gem.homepage = "http://github.com/rkneufeld/botfly"
     gem.authors = ["Ryan Neufeld"]
