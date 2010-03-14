@@ -10,7 +10,7 @@ module Botfly
       @callback = block if block_given?
     end
     
-    def method_missing(method,condition=nil,&block)
+    def method_missing(method,condition,&block)
       Botfly.logger.info("    RSP: Responder##{method}(#{condition.inspect})")
       
       add_matcher(method,condition)

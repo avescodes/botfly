@@ -11,14 +11,6 @@ module Botfly
       @responders = {}
       @main_thread = Thread.current
     end
-  
-    def on(type, &block)
-      Botfly.logger.info("  BOT: Bot#on")
-      klass = Botfly.const_get(type.to_s.capitalize + "Responder")
-      (@responders[type] ||= []) << responder = klass.new(@client, self, &block)
-      Botfly.logger.info("  BOT: #{type.to_s.capitalize}Responder added to responder chain")
-      return responder
-    end
     
     def connect
       Botfly.logger.info("  BOT: Connecting to #{@jid}...")
@@ -29,9 +21,17 @@ module Botfly
       @client.send(Jabber::Presence.new.set_status("Carrier has arrived"))
       #Thread.stop
     end
+    
+    def on(type, &block)
+      Botfly.logger.info("  BOT: Bot#on")
+      klass = Botfly.const_get(type.to_s.capitalize + "Responder")
+      (@responders[type] ||= []) << responder = klass.new(@client, self, &block)
+      Botfly.logger.info("  BOT: #{type.to_s.capitalize}Responder added to responder chain")
+      return responder
+    end
       
     def quit
-      @client.disconnect
+      @client.close
       @main_thread.continue
     end
       
