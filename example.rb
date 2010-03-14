@@ -6,7 +6,7 @@ require 'yaml'
 config = YAML::load(ARGF.read) if ARGF
 puts config.inspect
 
-Jabber::debug = true
+#Jabber::debug = true
 
 bot = Botfly.login(config["jid"],config["pass"]) do
   on(:message).nick(/rkneufeld/) do
@@ -15,6 +15,7 @@ bot = Botfly.login(config["jid"],config["pass"]) do
     @count += 1
     reply("That's the #{@count}th message I've received.")
   end
+  on(:message).body(/^exit$/) { quit }
   on(:presence) { puts self }
   connect
 end

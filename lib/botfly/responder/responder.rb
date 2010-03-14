@@ -33,14 +33,9 @@ module Botfly
         instance_eval &cb
       end
     end
-    
-    # TODO: Set sensible callable methods
-    def send(nick,msg) #delegate this to the object
-      Botfly.logger.debug("    RSP: Sending message to #{nick}: #{msg}")
-      
-      m=Jabber::Message.new(nick,msg)
-      m.type = :chat
-      @client.send(m)
+
+    def quit
+      @bot.quit
     end
     # TODO: add other @client actions as delegates    
 

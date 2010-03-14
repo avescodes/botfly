@@ -9,6 +9,7 @@ module Botfly
       @jid = Jabber::JID.new(jid)
       @client = Jabber::Client.new(@jid)
       @responders = {}
+      @main_thread = Thread.current
     end
   
     def on(type, &block)
@@ -27,6 +28,11 @@ module Botfly
       register_for_xmpp_callbacks
       @client.send(Jabber::Presence.new.set_status("Carrier has arrived"))
       #Thread.stop
+    end
+      
+    def quit
+      @client.disconnect
+      @main_thread.continue
     end
       
   private
