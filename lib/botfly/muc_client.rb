@@ -4,7 +4,6 @@ module Botfly
   class MUCClient
     def initialize(room, bot, &block)
       Botfly.logger.info("      MUC: New client created")
-      Botfly.logger.info("      MUC: bot was #{bot})
       @bot = bot
       @client = @bot.client
       @room = room
@@ -34,14 +33,14 @@ module Botfly
       Botfly.logger.info("      MUC: Connecting...")      
       @muc = Jabber::MUC::SimpleMUCClient.new(@client)
       register_for_muc_callbacks
-      @muc.join("#{room}@#{domain}/#{resource}")
+      @jid = Jabber::JID.new("#{@room}@#{@domain}/#{@resource}")
+      @muc.join(@jid)
       Botfly.logger.info("      MUC: Done connecting")
     end
 
     def execute(&block)
       Botfly.logger.info("      MUC: Block deteceted, executing...")      
       instance_eval(&block)
-      register_for_muc_callbacks
       connect
     end
 
