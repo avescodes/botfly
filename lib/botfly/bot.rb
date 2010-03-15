@@ -2,7 +2,8 @@ require 'rubygems'
 
 module Botfly
   class Bot
-    attr_reader :responders, :client
+    attr_reader :responders, :client, :jid
+    
     def initialize(jid,pass)
       Botfly.logger.info("  BOT: Bot#new")
       @password = pass

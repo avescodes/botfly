@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
      "lib/botfly/matcher/nick_matcher.rb",
      "lib/botfly/matcher/subject_matcher.rb",
      "lib/botfly/responder.rb",
+     "lib/botfly/responder/common_responder_methods.rb",
      "lib/botfly/responder/message_responder.rb",
      "lib/botfly/responder/presence_responder.rb",
      "lib/botfly/responder/responder.rb",

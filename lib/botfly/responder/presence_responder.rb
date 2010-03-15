@@ -2,19 +2,24 @@ module Botfly
   class PresenceResponder < Responder
     def setup_instance_variables(params)
       Botfly.logger.debug("    RSP: #{self.class} setting up instance variables")
-      @old_presence = params[:old]
-      @presence = params[:new]
+            
+      # TODO: Figure out how xmpp works with presence messages so I know what to expect
+      if params[:new]
+        @presence = params[:new]      
+        @from = @presence.from
+        @show = @presence.show
+        @priority = @presence.priority
+        @status = @presence.status
+        @type = @presence.type
+      end
       
-      @from = @presence.from
-      @show = @presence.show
-      @priority = @presence.priority
-      @status = @presence.status
-      @type = @presence.type
-      
-      @old_status = @old_priority.status
-      @old_priority = @old_priority.priority 
-      @old_type = @old_priority.type
-      @old_show = @old_priority.show
+      if params[:old]
+        @old_presence = params[:old]
+        @old_status = @old_presence.status
+        @old_priority = @old_presence.priority 
+        @old_type = @old_presence.type
+        @old_show = @old_presence.show
+      end
     end
   end
 end
