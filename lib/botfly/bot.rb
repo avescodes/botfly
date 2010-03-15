@@ -30,6 +30,10 @@ module Botfly
       Botfly.logger.info("  BOT: #{type.to_s.capitalize}Responder added to responder chain")
       return responder
     end
+    
+    def join(room_name,&block)
+      return MUCClient.new(room_name,self,&block)
+    end
       
     def quit
       @client.close
@@ -46,7 +50,7 @@ module Botfly
         Botfly.logger.debug("    CB: Got Message") 
         respond_to(:message, :message => message)
       end
-      @client.add_presence_callback do |old_presence,new_presence| 
+      @client.add_presence_callback do |new_presence,old_presence| 
         Botfly.logger.debug("    CB: Got Presence")
         respond_to(:presence, :old => old_presence, :new => new_presence)
       end
@@ -58,17 +62,6 @@ module Botfly
       responders = params[:muc] ? @muc_responders[params[:muc]] : @responders
       responders[callback_type].each {|r| r.callback_with params} if responders[callback_type]
     end
-    
-#    def register_for_muc_callbacks(client)
-#      params = {:muc => client}
-##      client.on_join {|time,nick| respond_to(:join, params.merge!(:time=>time,:nick=>nick))}
-#      client.on_leave {|time,nick| respond_to(:leave, params.merge!(:time=>time,:nick=>nick))}
-#      client.on_message {|time,nick,text| respond_to(:message, params.merge!(:time=>time,:nick=>nick,:text=>text))}
-#      client.on_private_message {|time,nick,text| respond_to(:private_message,    params.merge!(:time=>time,:nick=>nick,:text=>text))}
-#      client.on_room_message {|time,text| respond_to(:room_message, params.merge!(:time => time, :text => text))}
-#      client.on_self_leave {|time| respond_to(:self_leave, params.merge!(:time => time)) }
-#      client.on_subject {|time,nick,subject| respond_to(:subject, params.merge!(:time => time, :nick => nickname, :subject => subject))}
-#    end    
         
   end
 end
