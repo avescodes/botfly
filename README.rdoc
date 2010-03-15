@@ -1,9 +1,19 @@
-= botfly
+= Botfly
 
-Description goes here.
+Botfly is a Jabber Bot DSL that makes writing bots a joy.
+
+== Installation
+
+   gem install botfly
+
+Go nuts!
+
+== Usage
+
+Coming soon, for now take a look at `example.rb`
 
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
