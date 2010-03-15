@@ -17,9 +17,9 @@ bot = Botfly.login(config["jid"],config["pass"]) do
     FileUtils.cd(project) do
       result = `git blame -p -L#{line},#{line} #{file}`
     end
-    
-    author = result.lines.find{|e|e=~/^author /}.sub(/author /,'').strip
-    time   = Time.at(result.lines.find{|e|e=~/^author-time /}.sub(/author-time /,'').to_i)
+
+    author = result.scan(/author (.*)\n/).first
+    time   = Time.at(result.scan(/author-time (.*)\n/).first.to_i)
     commit = result.lines.first.split(' ').first.strip
     
     reply "#{author}, #{time}, #{commit}"
