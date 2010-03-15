@@ -4,19 +4,22 @@ module Botfly
   class MUCClient
     def initialize(room, bot, &block)
       Botfly.logger.info("      MUC: New client created")
-      
-      @bot,@client = @bot,@bot.client
+      Botfly.logger.info("      MUC: bot was #{bot})
+      @bot = bot
+      @client = @bot.client
       @room = room
       @domain = "conference.#{@bot.jid.domain}"  # A sensible default for now
       @resource = @bot.jid.resource
       
       execute(&block) if block_given? # i.e. join(room) do ... end
+      return self
     end
     
     def as(resource, &block)
       Botfly.logger.info("      MUC: as #{resource}")
       @resource = resource
       execute(&block) if block_given?
+      return self
     end
     
     def leave_room; raise "Implement Me!"; end

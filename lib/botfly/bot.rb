@@ -32,7 +32,7 @@ module Botfly
     end
     
     def join(room_name,&block)
-      return MUCClient.new(room_name,self,&block)
+      return Botfly::MUCClient.new(room_name,self,&block)
     end
       
     def quit

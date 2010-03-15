@@ -6,8 +6,10 @@ require 'xmpp4r/muc'
 require 'botfly/responder'
 require 'botfly/bot'
 require 'botfly/matcher'
+require 'botfly/m_u_c_client'
 
 require 'logger'
+
 
 module Botfly
   def Botfly.logger

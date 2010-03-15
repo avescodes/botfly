@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ryan Neufeld"]
-  s.date = %q{2010-03-14}
+  s.date = %q{2010-03-15}
   s.description = %q{Botfly is a Jabber Bot DSL that lets you write bots with ease. Enjoy, while it's still fresh and VERY ALPHA.}
   s.email = %q{ryan@ryanneufeld.ca}
   s.extra_rdoc_files = [
@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
      "lib/botfly/matcher/matcher.rb",
      "lib/botfly/matcher/nick_matcher.rb",
      "lib/botfly/matcher/subject_matcher.rb",
+     "lib/botfly/muc_client.rb",
      "lib/botfly/responder.rb",
      "lib/botfly/responder/common_responder_methods.rb",
      "lib/botfly/responder/message_responder.rb",
