@@ -1,5 +1,7 @@
 module Botfly
   class Responder
+    include Botfly::CommonResponderMethods
+
     attr_reader :callback, :callback_type
     
     def initialize(client,bot,&block)

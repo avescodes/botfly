@@ -17,7 +17,7 @@ bot = Botfly.login(config["jid"],config["pass"]) do
     reply("That's the #{@count}th message I've received.")
   end
 
-  on(:presence) { puts self }
+  on(:presence) { send("rkneufeld","Got presence #{@status} from #{@from}") }
   connect
 end
 Thread.stop
