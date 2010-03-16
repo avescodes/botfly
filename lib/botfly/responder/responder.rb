@@ -1,4 +1,3 @@
-require 'forwardable'
 module Botfly
   class Responder
     @@id = 1

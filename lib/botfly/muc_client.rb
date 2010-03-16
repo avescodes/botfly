@@ -2,8 +2,11 @@ require 'xmpp4r/muc'
 
 module Botfly
   class MUCClient
+    extend Forwardable
     attr_accessor :responders
     attr_reader :client, :bot
+    
+    def_delegator :@block_state, :room
     
     def initialize(room, bot, &block)
       Botfly.logger.info("      MUC: New client created")
@@ -69,8 +72,8 @@ module Botfly
 
     def execute(&block)
       Botfly.logger.info("      MUC: Block deteceted, executing...")      
-      instance_eval(&block)
       connect
+      instance_eval(&block)
     end
 
     def register_for_muc_callbacks
