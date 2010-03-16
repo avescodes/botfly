@@ -1,27 +1,29 @@
 require 'rubygems'
 require 'botfly'
-
+require 'fileutils'
 require 'yaml'
 
 config = YAML::load(ARGF.read) if ARGF
-puts config.inspect
-
-Jabber::debug = true
 
 bot = Botfly.login(config["jid"],config["pass"]) do
-  # on(:message).body(/^exit$/) { reply "Goodbye!"; quit }
-  # on(:message).nick(/rkneufeld/) do
-  #   Botfly.logger.info("Callback called")
-  #   @count ||= 0
-  #   @count += 1
-  #   reply("That's the #{@count}th message I've received.")
-  # end
-  # 
-  # on(:presence) { send("rkneufeld","I got a presence daddy!") }
-  join("bot-test").as("robot") do
+  on.message.body(/^blame/) do |a|
+    match = @body.match(/^blame (.*):(.*)$/)
+    file = match[1]
+    line = match[2].to_i
+
+    project = "/Users/burke/src/jsgithistory"
     
+    result=nil
+    FileUtils.cd(project) do
+      result = `git blame -p -L#{line},#{line} #{file}`
+    end
+
+    author = result.scan(/author (.*)\n/).first
+    time   = Time.at(result.scan(/author-time (.*)\n/).first.to_i)
+    commit = result.lines.first.split(' ').first.strip
+    
+    reply "#{author}, #{time}, #{commit}"
   end
-  connect
 end
-Thread.stop
-loop{}
+
+Thread.stop;loop
