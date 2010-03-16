@@ -47,8 +47,12 @@ module Botfly
       @main_thread.continue
     end
     
+    # FIXME: Not being removed
     def remove_responder(id_to_remove)
-      @responders.reject! {|r| r.id == id_to_remove }
+      Botfly.logger.info("  BOT: Removing responder #{id_to_remove}")
+      @responders.each { |chain| chain = chain.reject {|r| r.id == id_to_remove } }
+    end
+    
   private
 
     def register_for_xmpp_callbacks

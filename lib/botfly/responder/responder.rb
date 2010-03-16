@@ -1,9 +1,12 @@
+require 'forwardable'
 module Botfly
   class Responder
     @@id = 1
     include Botfly::CommonResponderMethods
+    extend Forwardable
 
-    attr_reader :callback, :callback_type, :id
+    attr_reader :callback, :callback_type, :id, :bot
+    def_delegator :@bot, :client
     
     def initialize(client,bot,&block)
       Botfly.logger.info("    RSP: #{self.class.to_s}#new")
