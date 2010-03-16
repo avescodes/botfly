@@ -35,6 +35,8 @@ Gem::Specification.new do |s|
      "lib/botfly/responder.rb",
      "lib/botfly/responder/common_responder_methods.rb",
      "lib/botfly/responder/message_responder.rb",
+     "lib/botfly/responder/muc_message_responder.rb",
+     "lib/botfly/responder/muc_responder.rb",
      "lib/botfly/responder/presence_responder.rb",
      "lib/botfly/responder/responder.rb",
      "spec/botfly_spec.rb",

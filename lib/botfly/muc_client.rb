@@ -2,6 +2,9 @@ require 'xmpp4r/muc'
 
 module Botfly
   class MUCClient
+    attr_accessor :responders
+    attr_reader :client, :bot
+    
     def initialize(room, bot, &block)
       Botfly.logger.info("      MUC: New client created")
       @bot = bot
@@ -9,6 +12,9 @@ module Botfly
       @room = room
       @domain = "conference.#{@bot.jid.domain}"  # A sensible default for now
       @resource = @bot.jid.resource
+      
+      @block_state = {}
+      @responders = {}
       
       execute(&block) if block_given? # i.e. join(room) do ... end
       return self
@@ -21,17 +27,40 @@ module Botfly
       return self
     end
     
+    class OnRecognizer
+      def initialize(obj); @obj = obj; end
+
+      def method_missing(type,&block)
+        Botfly.logger.info("      MUC: MUCClient#on")
+        klass = Botfly.const_get("MUC" + type.to_s.capitalize + "Responder")
+        (@obj.responders[type] ||= []) << responder = klass.new(@obj.client, @obj, &block)
+        Botfly.logger.info("      MUC: MUC#{type.to_s.capitalize}Responder added to responder chain")
+        return responder
+      end
+    end
+    
+    def on
+      return OnRecognizer.new(self)
+    end
+    
     def leave_room; raise "Implement Me!"; end
     
     def respond_to(type, params)
       Botfly.logger.info("      MUC: Responding to method in MUC")      
     end
     
+    def [](thing)
+      @block_state[thing]
+    end
+    
+    def []=(thing, set_to)
+      @block_state[thing] = set_to
+    end
   private      
 
     def connect
       Botfly.logger.info("      MUC: Connecting...")      
-      @muc = Jabber::MUC::SimpleMUCClient.new(@client)
+      @muc = Jabber::MUC::SimpleMUCClient.new(@bot.client)
       register_for_muc_callbacks
       @jid = Jabber::JID.new("#{@room}@#{@domain}/#{@resource}")
       @muc.join(@jid)

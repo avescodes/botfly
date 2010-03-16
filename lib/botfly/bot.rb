@@ -3,6 +3,8 @@ require 'rubygems'
 module Botfly
   class Bot
     attr_accessor :responders, :client
+    attr_reader :jid
+    
     def initialize(jid,pass)
       Botfly.logger.info("  BOT: Bot#new")
       @password = pass
@@ -10,6 +12,7 @@ module Botfly
       @client = Jabber::Client.new(@jid)
       @responders = {}
       @main_thread = Thread.current
+      @block_state = {}
     end
     
     def connect
@@ -51,6 +54,14 @@ module Botfly
     def remove_responder(id_to_remove)
       Botfly.logger.info("  BOT: Removing responder #{id_to_remove}")
       @responders.each { |chain| chain = chain.reject {|r| r.id == id_to_remove } }
+    end
+    
+    def [](key)
+      @block_state[key]
+    end
+    
+    def []=(key, set_to)
+      @block_state[key] = set_to
     end
     
   private
