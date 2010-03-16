@@ -49,12 +49,12 @@ module Botfly
       Botfly.logger.info("      MUC: Responding to method in MUC")      
     end
     
-    def [](thing)
-      @block_state[thing]
+    def [](key)
+      @block_state[key]
     end
     
-    def []=(thing, set_to)
-      @block_state[thing] = set_to
+    def []=(key, set_to)
+      @block_state[key] = set_to
     end
   private      
 
