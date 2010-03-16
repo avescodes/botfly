@@ -10,6 +10,7 @@ require 'botfly/muc_client'
 
 require 'logger'
 
+Thread.abort_on_exception = true
 
 module Botfly
   def Botfly.logger

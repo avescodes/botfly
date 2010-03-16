@@ -46,7 +46,9 @@ module Botfly
       @client.close
       @main_thread.continue
     end
-      
+    
+    def remove_responder(id_to_remove)
+      @responders.reject! {|r| r.id == id_to_remove }
   private
 
     def register_for_xmpp_callbacks

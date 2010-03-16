@@ -12,5 +12,9 @@ module Botfly
       msg.subject = opts[:subject]
       @client.send(msg)
     end
+    
+    def remove(responder_id)
+      @bot.remove_responder(responder_id)
+    end
   end
 end

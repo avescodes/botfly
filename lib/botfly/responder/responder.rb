@@ -1,8 +1,9 @@
 module Botfly
   class Responder
+    @@id = 1
     include Botfly::CommonResponderMethods
 
-    attr_reader :callback, :callback_type
+    attr_reader :callback, :callback_type, :id
     
     def initialize(client,bot,&block)
       Botfly.logger.info("    RSP: #{self.class.to_s}#new")
@@ -10,6 +11,7 @@ module Botfly
       @bot = bot
       @client = client
       @callback = block if block_given?
+      @id = @@id += 1
     end
     
     def method_missing(method,condition,&block)
@@ -19,7 +21,8 @@ module Botfly
       
       if block_given?
         Botfly.logger.info("    RSP: Callback recorded: #{block.inspect}")
-        @callback = block 
+        @callback = block
+        return @id
       end
       
       return self

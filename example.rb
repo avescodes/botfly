@@ -6,7 +6,7 @@ require 'yaml'
 config = YAML::load(ARGF.read) if ARGF
 
 bot = Botfly.login(config["jid"],config["pass"]) do
-  on.message.body(/^blame/) do |a|
+  blame_responder = on.message.body(/^blame/) do |a|
     match = @body.match(/^blame (.*):(.*)$/)
     file = match[1]
     line = match[2].to_i
@@ -23,6 +23,10 @@ bot = Botfly.login(config["jid"],config["pass"]) do
     commit = result.lines.first.split(' ').first.strip
     
     reply "#{author}, #{time}, #{commit}"
+  end
+  on.message.from(/^rkneufeld/).body(/kill blame/) do
+    reply "Sure thing! You ARE the boss!"
+    remove blame_responder
   end
 end
 

@@ -10,4 +10,5 @@ module Botfly
       return msg.from.node =~ @condition
     end
   end
+  FromMatcher = NickMatcher
 end
