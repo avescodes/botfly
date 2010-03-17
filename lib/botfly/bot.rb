@@ -37,10 +37,9 @@ module Botfly
       @main_thread.continue
     end
     
-    # FIXME: Not being removed
     def remove_responder(id_to_remove)
       Botfly.logger.info("  BOT: Removing responder #{id_to_remove}")
-      @responders.each { |chain| chain = chain.reject {|r| r.id == id_to_remove } }
+      @responders.each { |pair| key,chain = pair; chain.reject! {|r| r.id == id_to_remove } }
     end
 
     def to_debug_s
