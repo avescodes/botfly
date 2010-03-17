@@ -5,13 +5,12 @@ module Botfly
     attr_reader :jid
     
     def initialize(jid,pass)
+      super
       Botfly.logger.info("  BOT: Bot#new")
       @password = pass
       @jid = Jabber::JID.new(jid)
       @client = Jabber::Client.new(@jid)
-      @responders = {}
       @main_thread = Thread.current
-      @block_state = {}
     end
     
     def connect

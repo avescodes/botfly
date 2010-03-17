@@ -7,6 +7,7 @@ module Botfly
     def_delegator :@block_state, :room
     
     def initialize(room, bot, &block)
+      super
       Botfly.logger.info("      MUC: New client created")
       @bot = bot
       @client = @bot.client
@@ -24,11 +25,7 @@ module Botfly
       execute(&block) if block_given?
       return self
     end
-
-    def on
-      return OnRecognizer.new(self, 'MUC')
-    end
-    
+  
     def leave_room; raise "Implement Me!"; end
     
     def respond_to(type, params)
@@ -36,9 +33,8 @@ module Botfly
       # TODO: Implement
     end
     
-    def to_debug_s
-      "MUC"
-    end
+    def to_debug_s; "MUC"; end
+    def class_prefix; "MUC"; end
   private      
 
     def connect

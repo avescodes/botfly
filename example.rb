@@ -24,9 +24,15 @@ bot = Botfly.login(config["jid"],config["pass"]) do
     
     reply "#{author}, #{time}, #{commit}"
   end
-  on.message.from(/^rkneufeld/).body(/kill blame/) do
+  join('bots') do
+    on.message do
+      reply "Hi"
+    end
+  end
+  on.message.from(/^rkneufeld/).body(/^kb$/) do
     reply "Sure thing! You ARE the boss!"
     remove blame_responder
+    reply "There, all done"
   end
 end
 

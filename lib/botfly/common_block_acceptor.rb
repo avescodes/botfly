@@ -5,7 +5,7 @@ module Botfly
     attr_accessor :responders  
     attr_reader :client
     
-    def initialize
+    def initialize(ignored,ignore)
       @block_state = {}
       @responders = {}
     end
@@ -27,16 +27,24 @@ module Botfly
       @block_state[key] = set_to
     end
     
+    def on
+      return OnRecognizer.new(self)
+    end
+    
     class OnRecognizer
       def initialize(obj); @obj = obj; end
 
-      def method_missing(type,prefix='',&block)
+      def method_missing(type,&block)
         Botfly.logger.info("  #{@obj.to_debug_s}: Bot#on")
-        klass = Botfly.const_get(prefix + type.to_s.capitalize + "Responder")
+        klass = Botfly.const_get(@obj.class_prefix + type.to_s.capitalize + "Responder")
         (@obj.responders[type] ||= []) << responder = klass.new(@obj.client, @obj, &block)
-        Botfly.logger.info("  #{@obj.to_debug_s}: #{prefix}#{type.to_s.capitalize}Responder added to responder chain")
+        Botfly.logger.info("  #{@obj.to_debug_s}: #{@obj.class_prefix}#{type.to_s.capitalize}Responder added to responder chain")
         return responder
       end
+    end
+    
+    def class_prefix
+      ''
     end
   end
 end
