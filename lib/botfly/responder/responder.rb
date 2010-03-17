@@ -53,11 +53,6 @@ module Botfly
       
       Botfly.logger.debug("    RSP: Adding to matcher chain: #{@matcher_chain.inspect}")
     end
-    
-    # TODO: Check callback is in acceptable list - MUC subclass can override this list
-    def register_with_bot(callback_type)
-      raise "AbstractMethodError: You must implement this method in a concrete subclass"
-    end      
 
     def setup_instance_variables(params)
       raise "AbstractMethodError: You must implement this method in a concrete subclass"

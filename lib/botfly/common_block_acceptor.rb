@@ -10,10 +10,6 @@ module Botfly
       @responders = {}
     end
     
-    def to_debug_s
-      raise "AbstractMethodError: Implement in subclass"
-    end
-    
     ABSTRACT_RAISE_ERROR = "AbstractMethodError: Implement in subclass"
     def to_debug_s;               raise ABSTRACT_RAISE_ERROR; end
     def respond_to(type,params);  raise ABSTRACT_RAISE_ERROR; end
@@ -25,6 +21,11 @@ module Botfly
     
     def []=(key, set_to)
       @block_state[key] = set_to
+    end
+
+    def remove_responder(id_to_remove)
+      Botfly.logger.info("  BOT: Removing responder #{id_to_remove}")
+      @responders.each { |pair| key,chain = pair; chain.reject! {|r| r.id == id_to_remove } }
     end
     
     def on

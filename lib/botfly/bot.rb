@@ -23,10 +23,6 @@ module Botfly
       #Thread.stop
     end
     
-    def on
-      return OnRecognizer.new(self)
-    end
-    
     def join(room_name,&block)
       return Botfly::MUCClient.new(room_name,self,&block)
     end
@@ -36,11 +32,6 @@ module Botfly
       @main_thread.continue
     end
     
-    def remove_responder(id_to_remove)
-      Botfly.logger.info("  BOT: Removing responder #{id_to_remove}")
-      @responders.each { |pair| key,chain = pair; chain.reject! {|r| r.id == id_to_remove } }
-    end
-
     def to_debug_s
       "BOT"
     end
@@ -64,8 +55,7 @@ module Botfly
     
     def respond_to(callback_type, params)
       Botfly.logger.info("  BOT: Responding to callback of type: #{callback_type}")
-      responders = params[:muc] ? @muc_responders[params[:muc]] : @responders
-      responders[callback_type].each {|r| r.callback_with params} if responders[callback_type]
+      @responders[callback_type].each {|r| r.callback_with params} if @responders[callback_type]
     end
   end
 end

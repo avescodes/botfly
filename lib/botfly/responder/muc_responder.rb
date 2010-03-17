@@ -1,5 +1,62 @@
+# FIXME: DRY up this and Respnoder 
 module Botfly
   class MUCResponder < Responder
+     @@id = 1
+     extend Forwardable
      
+     def_delegator :@muc, :on
+     def_delegator :@bot, :client
+     
+     def initialize(client,bot,&block)
+       Botfly.logger.info("    RSP: #{self.class.to_s}#new")
+       @matcher_chain = []
+       @bot = bot
+
+       @callback = block if block_given?
+       @id = @@id += 1
+     end
+     
+     def method_missing(method,condition,&block)
+       Botfly.logger.info("    RSP: Responder##{method}(#{condition.inspect})")
+
+       add_matcher(method,condition)
+
+       if block_given?
+         Botfly.logger.info("    RSP: Callback recorded: #{block.inspect}")
+         @callback = block
+         return @id
+       end
+
+       return self
+     end
+     
+     def callback_with(params)
+       Botfly.logger.debug("    RSP: Launching callback with params: #{params.inspect}")
+
+       setup_instance_variables(params)
+       if @matcher_chain.all? {|matcher| matcher.match(params) }
+         Botfly.logger.debug("      RSP: All matchers passed")
+         cb = @callback # Ruby makes it difficult to apply & to an instance variable
+         instance_eval &cb
+       end
+     end
+     
+     def leave #room
+       raise "NotImplementedError: Sorry, coming soon!"
+     end
+     
+   private
+     def add_matcher(method, condition)
+       klass = Botfly.const_get("MUC" + method.to_s.capitalize + "Matcher")
+       @matcher_chain << klass.new(condition)
+
+       Botfly.logger.debug("    RSP: Adding to matcher chain: #{@matcher_chain.inspect}")
+     end
+
+     def setup_instance_variables(params)
+       @text = @body = params[:text]
+       @nick = @from = params[:nick]
+       @time = params[:time]
+     end     
   end
 end
