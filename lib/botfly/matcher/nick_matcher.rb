@@ -5,7 +5,8 @@ module Botfly
   class NickMatcher < Matcher
     def match(params)
       msg = params[:message]
-      Botfly.logger.debug "      MCH: Matching #{@condition.inspect} against #{msg.from.inspect}"Botfly.logger.debug "        RESULT: #{(msg.from.node =~ @condition).inspect}"
+      Botfly.logger.debug "      MCH: Matching #{@condition.inspect} against #{msg.from.inspect}"
+      Botfly.logger.debug "        RESULT: #{(msg.from.node =~ @condition).inspect}"
       return msg.from.node =~ @condition
     end
   end
