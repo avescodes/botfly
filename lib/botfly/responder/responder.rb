@@ -8,7 +8,7 @@ module Botfly
     def_delegator :@bot, :client
     
     def initialize(bot,&block)
-      Botfly.logger.info("    RSP: #{self.class.to_s}#new")
+      Botfly.logger.info("RSP: #{self.class.to_s}#new")
       @matcher_chain = []
       @bot = bot
       @callback = block if block_given?
@@ -16,12 +16,12 @@ module Botfly
     end
     
     def method_missing(method,condition,&block)
-      Botfly.logger.info("    RSP: Responder##{method}(#{condition.inspect})")
+      Botfly.logger.info("RSP: Responder##{method}(#{condition.inspect})")
       
       add_matcher(method,condition)
       
       if block_given?
-        Botfly.logger.info("    RSP: Callback recorded: #{block.inspect}")
+        Botfly.logger.info("RSP: Callback recorded: #{block.inspect}")
         @callback = block
         return @id
       end
@@ -30,11 +30,11 @@ module Botfly
     end
     
     def callback_with(params)
-      Botfly.logger.debug("    RSP: Launching callback with params: #{params.inspect}")
+      Botfly.logger.debug("RSP: Launching callback with params: #{params.inspect}")
 
       setup_instance_variables(params)
       if @matcher_chain.all? {|matcher| matcher.match(params) }
-        Botfly.logger.debug("      RSP: All matchers passed")
+        Botfly.logger.debug("RSP: All matchers passed")
         cb = @callback # Ruby makes it difficult to apply & to an instance variable
         instance_eval &cb
       end
@@ -50,7 +50,7 @@ module Botfly
       klass = Botfly.const_get(method.to_s.capitalize + "Matcher")
       @matcher_chain << klass.new(condition)
       
-      Botfly.logger.debug("    RSP: Adding to matcher chain: #{@matcher_chain.inspect}")
+      Botfly.logger.debug("RSP: Adding to matcher chain: #{@matcher_chain.inspect}")
     end
 
     def setup_instance_variables(params)
