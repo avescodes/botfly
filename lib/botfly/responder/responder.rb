@@ -7,11 +7,10 @@ module Botfly
     attr_reader :callback, :callback_type, :id, :bot
     def_delegator :@bot, :client
     
-    def initialize(client,bot,&block)
+    def initialize(bot,&block)
       Botfly.logger.info("    RSP: #{self.class.to_s}#new")
       @matcher_chain = []
       @bot = bot
-      @client = client
       @callback = block if block_given?
       @id = @@id += 1
     end

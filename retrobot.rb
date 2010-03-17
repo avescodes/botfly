@@ -23,7 +23,7 @@ bot = Botfly.login(config["jid"],config["pass"]) do
         h[n] ||= 0
         h[n] += 1
         h 
-      end.sort {|a,b| b[-1] <=> a[-1] }.each {|pair| puts "#{pair[0]} => #{pair[-1]}" }
+      end.sort {|a,b| b[-1] <=> a[-1] }.each {|pair| say "#{pair[0]} => #{pair[-1]}" }
     end
   end
 end

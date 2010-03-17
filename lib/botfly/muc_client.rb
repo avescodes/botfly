@@ -2,9 +2,9 @@ require 'xmpp4r/muc'
 
 module Botfly
   class MUCClient < CommonBlockAcceptor
-    attr_reader :bot
+    attr_reader :bot, :muc
     
-    def_delegator :@block_state, :room
+    def room; self; end
     
     def initialize(room, bot, &block)
       super

@@ -6,11 +6,13 @@ module Botfly
      
      def_delegator :@muc, :on
      def_delegator :@bot, :client
+     def_delegator :@muc, :room
      
-     def initialize(client,bot,&block)
+     def initialize(muc,&block)
        Botfly.logger.info("    RSP: #{self.class.to_s}#new")
        @matcher_chain = []
-       @bot = bot
+       @muc = muc
+       @bot = @muc.bot
 
        @callback = block if block_given?
        @id = @@id += 1
@@ -43,6 +45,10 @@ module Botfly
      
      def leave #room
        raise "NotImplementedError: Sorry, coming soon!"
+     end
+     
+     def say(msg)
+       @muc.muc.say(msg)
      end
      
    private
