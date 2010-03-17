@@ -30,9 +30,7 @@ module Botfly
     
 
     def respond_to(callback_type, params)
-      Botfly.logger.info("MUC: Got callback with time #{params[:time].inspect}")
       if (params[:nick] != @resource && Time.now > @connected_at_time + 3)#seconds # Don't run callbacks on the slew of launch messages (at least until I figure out a better way to differentiate them)
-
         Botfly.logger.info("MUC: Responding to callback of type: #{callback_type} with time of #{params[:time]}")
         @responders[callback_type].each {|r| r.callback_with params} if @responders[callback_type]
       end
