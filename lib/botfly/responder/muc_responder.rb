@@ -18,7 +18,8 @@ module Botfly
        @id = @@id += 1
      end
      
-     def method_missing(method,condition,&block)
+     def method_missing(method,*args,&block)
+       condition = args.first
        Botfly.logger.info("RSP: Responder##{method}(#{condition.inspect})")
 
        add_matcher(method,condition)
@@ -51,6 +52,9 @@ module Botfly
        @muc.muc.say(msg)
      end
      
+     def remove(responder_id)
+       @muc.remove_responder(responder_id)
+     end
    private
      def add_matcher(method, condition)
        klass = Botfly.const_get("MUC" + method.to_s.capitalize + "Matcher")

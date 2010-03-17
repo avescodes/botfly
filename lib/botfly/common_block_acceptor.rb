@@ -24,7 +24,7 @@ module Botfly
     end
 
     def remove_responder(id_to_remove)
-      Botfly.logger.info("BOT: Removing responder #{id_to_remove}")
+      Botfly.logger.info("#{self.to_debug_s}: Removing responder #{id_to_remove}")
       @responders.each { |pair| key,chain = pair; chain.reject! {|r| r.id == id_to_remove } }
     end
     

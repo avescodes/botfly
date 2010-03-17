@@ -4,7 +4,7 @@ module Botfly
   class MUCClient < CommonBlockAcceptor
     attr_reader :bot, :muc
     
-    def room; self; end
+    def room; @block_state; end
     
     def initialize(room, bot, &block)
       super
@@ -13,7 +13,7 @@ module Botfly
       @client = @bot.client
       @room = room
       @domain = "conference.#{@bot.jid.domain}"  # A sensible default for now
-      @resource = @bot.jid.resource
+      @resource = @bot.jid.node
       
       execute(&block) if block_given? # i.e. join(room) do ... end
       return self
@@ -31,7 +31,8 @@ module Botfly
 
     def respond_to(callback_type, params)
       Botfly.logger.info("MUC: Got callback with time #{params[:time].inspect}")
-      if !params[:time].nil? # Only respond to messages from the server, if time is nil server didn't send 
+      if (params[:nick] != @resource && Time.now > @connected_at_time + 3)#seconds # Don't run callbacks on the slew of launch messages (at least until I figure out a better way to differentiate them)
+
         Botfly.logger.info("MUC: Responding to callback of type: #{callback_type} with time of #{params[:time]}")
         @responders[callback_type].each {|r| r.callback_with params} if @responders[callback_type]
       end
@@ -46,6 +47,7 @@ module Botfly
       @muc = Jabber::MUC::SimpleMUCClient.new(@bot.client)
       register_for_callbacks
       @jid = Jabber::JID.new("#{@room}@#{@domain}/#{@resource}")
+      @connected_at_time = Time.now
       @muc.join(@jid)
       Botfly.logger.info("MUC: Done connecting")
     end
