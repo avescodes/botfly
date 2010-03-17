@@ -30,8 +30,9 @@ module Botfly
     
 
     def respond_to(callback_type, params)
-      if params[:time].nil? or params[:time] > Time.now - 60 # For now, only respond to messages that occured after join
-        Botfly.logger.info("      MUC: Responding to callback of type: #{callback_type}")
+      Botfly.logger.info("      MUC: Got callback with time #{params[:time].inspect}")
+      if !params[:time].nil? # Only respond to messages from the server, if time is nil server didn't send 
+        Botfly.logger.info("      MUC: Responding to callback of type: #{callback_type} with time of #{params[:time]}")
         @responders[callback_type].each {|r| r.callback_with params} if @responders[callback_type]
       end
     end

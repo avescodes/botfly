@@ -4,7 +4,7 @@ require 'fileutils'
 require 'yaml'
 
 config = YAML::load(ARGF.read) if ARGF
-Jabber::debug = true
+
 bot = Botfly.login(config["jid"],config["pass"]) do
   join('lazer').as('retro-bot') do
     on.message.from(/^rkneufeld/).body(/start count/) do
