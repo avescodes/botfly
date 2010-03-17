@@ -7,7 +7,7 @@ config = YAML::load(ARGF.read) if ARGF
 Jabber::debug = true
 bot = Botfly.login(config["jid"],config["pass"]) do
   join('lazer').as('retro-bot') do
-    on.message.from(/^rkneufeld/).body(/retro: start count/) do
+    on.message.from(/^rkneufeld/).body(/start count/) do
       say "All votes are now being tallied. You have three votes, use them wisely"
       say "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
       room[:votes] = []
@@ -15,7 +15,7 @@ bot = Botfly.login(config["jid"],config["pass"]) do
         @body.scan(/(\d+)+/).map {|m| room[:votes] << m.first.to_i }
       end
     end
-    on.message.from(/^rkneufeld/).body(/retro: stop count/) do
+    on.message.from(/^rkneufeld/).body(/stop count/) do
       say "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
       say "Allright, voting is finished"
       remove room[:votes_responder]

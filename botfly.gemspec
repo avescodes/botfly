@@ -30,6 +30,9 @@ Gem::Specification.new do |s|
      "lib/botfly/matcher.rb",
      "lib/botfly/matcher/body_matcher.rb",
      "lib/botfly/matcher/matcher.rb",
+     "lib/botfly/matcher/muc_nick_matcher.rb",
+     "lib/botfly/matcher/muc_text_matcher.rb",
+     "lib/botfly/matcher/muc_time_matcher.rb",
      "lib/botfly/matcher/nick_matcher.rb",
      "lib/botfly/matcher/subject_matcher.rb",
      "lib/botfly/muc_client.rb",
@@ -40,6 +43,7 @@ Gem::Specification.new do |s|
      "lib/botfly/responder/muc_responder.rb",
      "lib/botfly/responder/presence_responder.rb",
      "lib/botfly/responder/responder.rb",
+     "retrobot.rb",
      "spec/botfly_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb"
