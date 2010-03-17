@@ -64,7 +64,7 @@ module Botfly
       #@muc.on_private_message {|time,nick,text| respond_to(:private_message,    :time=>time,:nick=>nick,:text=>text)} # Low on the priority to impl. list
       @muc.on_room_message {|time,text| respond_to(:room_message, :time => time, :text => text)}
       @muc.on_self_leave {|time| respond_to(:self_leave, :time => time) }
-      @muc.on_subject {|time,nick,subject| respond_to(:subject, :time => time, :nick => nickname, :subject => subject)}
+      @muc.on_subject {|time,nick,subject| respond_to(:subject, :time => time, :nick => nick, :subject => subject)}
     end
   end
 end
