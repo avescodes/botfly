@@ -19,11 +19,12 @@ bot = Botfly.login(config["jid"],config["pass"]) do
       say "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
       say "Allright, voting is finished"
       remove room[:votes_responder]
-      room[:votes].inject({}) do |h,n| 
+      sorted = room[:votes].inject({}) do |h,n| 
         h[n] ||= 0
         h[n] += 1
         h 
-      end.sort {|a,b| b[-1] <=> a[-1] }.each {|pair| say "#{pair[0]} => #{pair[-1]}" }
+      end.sort {|a,b| b[-1] <=> a[-1] }
+      sorted.each {|pair| say "#{pair[0]} => #{pair[-1]} : #{room[:voted][pair[0]].person} - #{room[:voted][pair[0]].name}" }
     end
     on.message.from(/^rkneufeld/).body(/^rb tally$/) do
       room[:tally_responders] = []
@@ -35,7 +36,7 @@ bot = Botfly.login(config["jid"],config["pass"]) do
     on.message.from(/^rkneufeld/).body(/^rb stop tally/) do
       # remove responders
       # tally messages
-      # output with votable format
+      # stored to room[:voted]
     end
   end
 end
