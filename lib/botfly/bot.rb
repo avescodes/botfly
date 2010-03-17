@@ -1,8 +1,7 @@
 require 'rubygems'
 
 module Botfly
-  class Bot
-    attr_accessor :responders, :client
+  class Bot < CommonBlockAcceptor
     attr_reader :jid
     
     def initialize(jid,pass)
@@ -20,21 +19,9 @@ module Botfly
       @client.connect
       @client.auth(@password)
       Botfly.logger.info("  BOT: Connected")
-      register_for_xmpp_callbacks
+      register_for_callbacks
       @client.send(Jabber::Presence.new.set_status("Carrier has arrived"))
       #Thread.stop
-    end
-    
-    class OnRecognizer
-      def initialize(obj); @obj = obj; end
-
-      def method_missing(type,&block)
-        Botfly.logger.info("  BOT: Bot#on")
-        klass = Botfly.const_get(type.to_s.capitalize + "Responder")
-        (@obj.responders[type] ||= []) << responder = klass.new(@obj.client, @obj, &block)
-        Botfly.logger.info("  BOT: #{type.to_s.capitalize}Responder added to responder chain")
-        return responder
-      end
     end
     
     def on
@@ -55,18 +42,14 @@ module Botfly
       Botfly.logger.info("  BOT: Removing responder #{id_to_remove}")
       @responders.each { |chain| chain = chain.reject {|r| r.id == id_to_remove } }
     end
-    
-    def [](key)
-      @block_state[key]
-    end
-    
-    def []=(key, set_to)
-      @block_state[key] = set_to
+
+    def to_debug_s
+      "BOT"
     end
     
   private
 
-    def register_for_xmpp_callbacks
+    def register_for_callbacks
       Botfly.logger.info("  BOT: Registering for callbacks with client")
 #     @client.add_update_callback {|presence| respond_to(:update, :presence => presence) }
 #     @client.add_subscription_request_callback {|item, pres| } # requires Roster helper
@@ -86,6 +69,5 @@ module Botfly
       responders = params[:muc] ? @muc_responders[params[:muc]] : @responders
       responders[callback_type].each {|r| r.callback_with params} if responders[callback_type]
     end
-        
   end
 end

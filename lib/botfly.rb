@@ -5,6 +5,7 @@ require 'xmpp4r/muc'
 require 'forwardable'
 require 'logger'
 
+require 'botfly/common_block_acceptor'
 require 'botfly/responder'
 require 'botfly/bot'
 require 'botfly/matcher'

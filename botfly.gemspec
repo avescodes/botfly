@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
      "example.rb",
      "lib/botfly.rb",
      "lib/botfly/bot.rb",
+     "lib/botfly/common_block_acceptor.rb",
      "lib/botfly/matcher.rb",
      "lib/botfly/matcher/body_matcher.rb",
      "lib/botfly/matcher/matcher.rb",
