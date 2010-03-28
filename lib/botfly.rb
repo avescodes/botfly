@@ -2,14 +2,16 @@ require 'rubygems'
 
 require 'xmpp4r'
 require 'xmpp4r/muc'
-require 'forwardable'
-require 'logger'
+require 'xmpp4r/roster'
 
 require 'botfly/common_block_acceptor'
 require 'botfly/responder'
 require 'botfly/bot'
 require 'botfly/matcher'
 require 'botfly/muc_client'
+
+require 'logger'
+require 'forwardable'
 
 Thread.abort_on_exception = true
 
@@ -22,7 +24,7 @@ module Botfly
     @logfile = logfile
     Botfly.logger.info("BOTFLY: #login")
     bot = Botfly::Bot.new(jid,pass)
-    bot.connect
+    bot.connect # Must connect first, since MUC requires an active connection to initiate
     bot.instance_exec(&block)
     return bot # At this point doesn't get returned, as the thread is stopped
   end
