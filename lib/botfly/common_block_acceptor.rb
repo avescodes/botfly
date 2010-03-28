@@ -5,7 +5,7 @@ module Botfly
     attr_accessor :responders  
     attr_reader :client
     
-    def initialize(ignored,ignore)
+    def initialize(jid,pass,opts={})
       @block_state = {}
       @responders = {}
     end
@@ -37,7 +37,8 @@ module Botfly
 
       def method_missing(type,&block)
         Botfly.logger.info("#{@obj.to_debug_s}: Bot#on")
-        klass = Botfly.const_get(@obj.class_prefix + type.to_s.capitalize + "Responder")
+        type_name = type.to_s.split('_').map(&:capitalize).join('')
+        klass = Botfly.const_get(@obj.class_prefix + type_name + "Responder")
         (@obj.responders[type] ||= []) << responder = klass.new(@obj, &block)
         Botfly.logger.info("#{@obj.to_debug_s}: #{@obj.class_prefix}#{type.to_s.capitalize}Responder added to responder chain")
         return responder

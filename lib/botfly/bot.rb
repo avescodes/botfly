@@ -20,10 +20,11 @@ module Botfly
       Botfly.logger.info("  BOT: Connecting to #{@host || @jid}...")
       @client.connect(@host)
       @client.auth(@password)
+      @roster = Jabber::Roster::Helper.new(@client)
       Botfly.logger.info("  BOT: Connected")
       register_for_callbacks
       @client.send(Jabber::Presence.new.set_status("Carrier has arrived"))
-      @roster = Jabber::Roster::Helper.new(@client)
+
       #Thread.stop
     end
 
@@ -43,7 +44,7 @@ module Botfly
     def register_for_callbacks
       Botfly.logger.info("  BOT: Registering for callbacks with client")
 #     @client.add_update_callback {|presence| respond_to(:update, :presence => presence) }
-      @client.add_subscription_request_callback do |item, pres| # requires Roster helper
+      @roster.add_subscription_request_callback do |item, pres| # requires Roster helper
         Botfly.logger.debug("    CB: Got Message")
         respond_to(:subscription_request, :roster_item => item, :presence => pres)
       end

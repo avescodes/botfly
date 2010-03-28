@@ -13,5 +13,6 @@ module Botfly
     end
     def decline
       @bot.roster.decline_subscription(@from)
+    end
   end
 end
