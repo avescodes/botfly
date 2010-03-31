@@ -15,7 +15,7 @@ Thread.abort_on_exception = true
 
 module Botfly
   def Botfly.logger
-    @logger = Logger.new(@logfile)
+    @logger ||= Logger.new(@logfile)
     return @logger
   end
   def Botfly.login(jid,pass,logfile=STDOUT,&block)
