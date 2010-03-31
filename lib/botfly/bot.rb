@@ -2,8 +2,7 @@ require 'rubygems'
 
 module Botfly
   class Bot < CommonBlockAcceptor
-    attr_accessor :responders, :client, :roster, :jid
-    
+    attr_reader :client, :roster, :jid, :host    
     def initialize(jid,pass, opts = {})
       super
       Botfly.logger.info("  BOT: Bot#new")
@@ -25,6 +24,7 @@ module Botfly
       @client.send(Jabber::Presence.new.set_status("Carrier has arrived"))
       @roster = Jabber::Roster::Helper.new(@client)
       #Thread.stop
+      self
     end
 
     def join(room_name,&block)

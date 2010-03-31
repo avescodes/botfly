@@ -4,14 +4,15 @@ require 'xmpp4r'
 require 'xmpp4r/muc'
 require 'xmpp4r/roster'
 
+require 'logger'
+require 'forwardable'
+
 require 'botfly/common_block_acceptor'
 require 'botfly/responder'
 require 'botfly/bot'
 require 'botfly/matcher'
 require 'botfly/muc_client'
 
-require 'logger'
-require 'forwardable'
 
 Thread.abort_on_exception = true
 

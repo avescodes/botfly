@@ -2,18 +2,16 @@ module Botfly
   class CommonBlockAcceptor
     extend Forwardable
 
-    attr_accessor :responders  
-    attr_reader :client
+    attr_reader :block_state, :responders
     
-    def initialize(ignored,ignore)
+    def initialize(*ignored)
       @block_state = {}
       @responders = {}
     end
     
-    ABSTRACT_RAISE_ERROR = "AbstractMethodError: Implement in subclass"
-    def to_debug_s;               raise ABSTRACT_RAISE_ERROR; end
-    def respond_to(type,params);  raise ABSTRACT_RAISE_ERROR; end
-    def on;                       raise ABSTRACT_RAISE_ERROR; end
+    def respond_to(type,params);  
+      raise "AbstractMethodError: Implement in subclass" 
+    end
 
     def [](key)
       @block_state[key]
@@ -35,17 +33,17 @@ module Botfly
     class OnRecognizer
       def initialize(obj); @obj = obj; end
 
-      def method_missing(type,&block)
+      def method_missing(name,&block)
         Botfly.logger.info("#{@obj.to_debug_s}: Bot#on")
-        klass = Botfly.const_get(@obj.class_prefix + type.to_s.capitalize + "Responder")
-        (@obj.responders[type] ||= []) << responder = klass.new(@obj, &block)
-        Botfly.logger.info("#{@obj.to_debug_s}: #{@obj.class_prefix}#{type.to_s.capitalize}Responder added to responder chain")
+        klass = Botfly.const_get(@obj.class_prefix + name.to_s.capitalize + "Responder")
+        (@obj.responders[name] ||= []) << responder = klass.new(@obj, &block)
+        Botfly.logger.info("#{@obj.to_debug_s}: #{@obj.class_prefix}#{name.to_s.capitalize}Responder added to responder chain")
         return responder
       end
     end
     
-    def class_prefix
-      ''
-    end
+    def class_prefix; ''; end
+    def to_debug_s;   ''; end
+
   end
 end
