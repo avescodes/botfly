@@ -11,6 +11,13 @@ describe CommonBlockAcceptor do
     [:responders, :block_state, :[], :[]=, :on, :remove_responder].each do |m|
       it { should respond_to m }
     end
+    describe "#[]" do
+      let(:acceptor) { CommonBlockAcceptor.new }
+      it "should provide hash-like access to block_state" do
+        acceptor[:foo] = :bar
+        acceptor[:foo].should be :bar
+      end
+    end
   end
 
   context "abstract method" do

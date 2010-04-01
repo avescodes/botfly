@@ -44,17 +44,14 @@ module Botfly
       Botfly.logger.info("  BOT: Registering for callbacks with client")
 #     @client.add_update_callback {|presence| respond_to(:update, :presence => presence) }
       @client.add_subscription_request_callback do |item, pres| # requires Roster helper
-        Botfly.logger.debug("    CB: Got Message")
         respond_to(:subscription_request, :roster_item => item, :presence => pres)
       end
 
       @client.add_message_callback do |message|
-        Botfly.logger.debug("    CB: Got Message") 
         respond_to(:message, :message => message)
       end
 
       @client.add_presence_callback do |new_presence,old_presence|
-        Botfly.logger.debug("    CB: Got Presence")
         respond_to(:presence, :old => old_presence, :new => new_presence)
       end
 
