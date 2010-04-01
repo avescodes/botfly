@@ -2,7 +2,7 @@ require 'xmpp4r/muc'
 
 module Botfly
   class MUCClient < CommonBlockAcceptor
-    attr_reader :bot, :muc
+    attr_reader :bot, :muc, :domain, :resource
     
     def room; @block_state; end
     

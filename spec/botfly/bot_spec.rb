@@ -4,13 +4,13 @@ include Botfly
 describe Botfly::Bot do
   context "initializer" do
     subject { Bot.new('jid','pass', :gtalk => true) }
-    its(:responders) { should be_a Hash }# TODO: This is a really coupled way of checking for this
+    its(:responders) { should be_a Hash }# TODO: This is a really coupled way of checking for super being called
     context "gtalk option is true" do
       its(:host) { should == 'talk.google.com' }
     end
   end
 
-  context "object" do
+  context "instance" do
     subject { Bot.new('jid','pass') }
     context "readers & accessors" do
       it { should respond_to :client }
@@ -31,7 +31,7 @@ describe Botfly::Bot do
   describe "#register_for_callbacks" do
     let(:bot) { Bot.new('jid', 'pass') }
     before(:each) { stub_jabber_client }
-    it "should receive calls for each callback" do
+    it "should register calls for each callback" do
       [:message, :presence, :subscription_request].each do |type|
         bot.client.should_receive(:"add_#{type}_callback")
       end
