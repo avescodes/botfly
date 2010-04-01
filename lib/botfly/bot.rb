@@ -19,10 +19,11 @@ module Botfly
       Botfly.logger.info("  BOT: Connecting to #{@host || @jid}...")
       @client.connect(@host)
       @client.auth(@password)
+      @roster = Jabber::Roster::Helper.new(@client)
       Botfly.logger.info("  BOT: Connected")
       register_for_callbacks
       @client.send(Jabber::Presence.new.set_status("Carrier has arrived"))
-      @roster = Jabber::Roster::Helper.new(@client)
+
       #Thread.stop
       self
     end
