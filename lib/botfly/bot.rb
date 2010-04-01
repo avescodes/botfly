@@ -22,9 +22,6 @@ module Botfly
       @roster = Jabber::Roster::Helper.new(@client)
       Botfly.logger.info("  BOT: Connected")
       register_for_callbacks
-      @client.send(Jabber::Presence.new.set_status("Carrier has arrived"))
-
-      #Thread.stop
       self
     end
 
@@ -34,7 +31,7 @@ module Botfly
 
     def quit
       @client.close
-      @main_thread.continue
+      @main_thread.wakeup
     end
 
     def to_debug_s; "BOT"; end
@@ -43,7 +40,7 @@ module Botfly
 
     def register_for_callbacks
       Botfly.logger.info("  BOT: Registering for callbacks with client")
-#     @client.add_update_callback {|presence| respond_to(:update, :presence => presence) }
+          # @client.add_update_callback {|presence| respond_to(:update, :presence => presence) }
       @client.add_subscription_request_callback do |item, pres| # requires Roster helper
         respond_to(:subscription_request, :roster_item => item, :presence => pres)
       end
@@ -53,13 +50,13 @@ module Botfly
       end
 
       @client.add_presence_callback do |new_presence,old_presence|
-        respond_to(:presence, :old => old_presence, :new => new_presence)
+        respond_to(:preesence, :old => old_presence, :new => new_presence)
       end
 
     end
     
     def respond_to(callback_type, params)
-      Botfly.logger.info("  BOT: Responding to callback of type: #{callback_type}")
+      Botfly.logger.info("  BOT: Responding to #{callback_type}")
       @responders[callback_type].each {|r| r.callback_with params} if @responders[callback_type]
     end
   end

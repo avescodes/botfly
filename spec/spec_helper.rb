@@ -9,9 +9,10 @@ Spec::Runner.configure do |config|
 end
 
 def stub_jabber_client
-  @client = stub("Client", :connect => nil, 
-                           :auth => nil,
-                           :send => nil)
-  def @client.method_missing(*args); end
-  Jabber::Client.should_receive(:new).and_return(@client)
+  client = stub("Jabber::Client",  :connect => nil, 
+                                    :auth => nil,
+                                    :send => nil)
+  def client.method_missing(*args); end
+  Jabber::Client.should_receive(:new).and_return(client)
+  client
 end
