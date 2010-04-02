@@ -49,8 +49,11 @@ describe Botfly::MUCClient do
     end
   end
 
-  describe "#leave_room" do
-    it "should leave the chat room"
+  describe "#leave" do
+    it "should leave the chat room" do 
+      muc_client.muc.should_receive(:exit)
+      muc_client.leave
+    end
   end
 
   describe "#respond_to" do

@@ -26,11 +26,11 @@ module Botfly
       return self
     end
   
-    def leave_room; raise "Implement Me!"; end
+    def leave; @muc.exit; end
     
 
     def respond_to(callback_type, params)
-      if (params[:nick] != @resource && Time.now > @connected_at_time + 3)#seconds # Don't run callbacks on the slew of launch messages (at least until I figure out a better way to differentiate them)
+      if (params[:nick] != @resource ) # don't respond to self
         Botfly.logger.info("MUC: Responding to callback of type: #{callback_type} with time of #{params[:time]}")
         @responders[callback_type].each {|r| r.callback_with params} if @responders[callback_type]
       end
@@ -45,8 +45,7 @@ module Botfly
       @muc = Jabber::MUC::SimpleMUCClient.new(@bot.client)
       register_for_callbacks
       @jid = Jabber::JID.new("#{@room}@#{@domain}/#{@resource}")
-      @connected_at_time = Time.now
-      @muc.join(@jid)
+      @muc.join(@jid, nil, :history => false)
       Botfly.logger.info("MUC: Done connecting")
     end
 
