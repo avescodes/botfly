@@ -29,7 +29,7 @@ module Botfly
     def leave; @muc.exit; end
     
 
-    def respond_to(callback_type, params)
+    def respond_to(callback_type, params={})
       if (params[:nick] != @resource ) # don't respond to self
         Botfly.logger.info("MUC: Responding to callback of type: #{callback_type} with time of #{params[:time]}")
         @responders[callback_type].each {|r| r.callback_with params} if @responders[callback_type]

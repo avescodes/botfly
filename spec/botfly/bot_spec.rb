@@ -32,9 +32,9 @@ describe Botfly::Bot do
     let(:bot) { Bot.new('jid', 'pass') }
     before(:each) { stub_jabber_client }
     it "should register calls for each callback" do
-      [:message, :presence, :subscription_request].each do |type|
-        bot.client.should_receive(:"add_#{type}_callback")
-      end
+      bot.roster.should_receive :add_subscription_request_callback
+      bot.client.should_receive :add_presence_callback
+      bot.client.should_receive :add_message_callback
       bot.send(:register_for_callbacks)
     end
   end

@@ -4,6 +4,12 @@ include Botfly
 describe Botfly::MUCClient do
   let(:jid) { stub("JID", :domain => 'domain.com', :node => 'resource') }
   let(:bot) { stub("Bot", :client => stub_jabber_client, :jid => jid) }
+  let(:muc) do
+    cbs = [:join, :leave, :message, :room_message, :self_leave, :subject]
+    cbs = cbs.inject({}) { |h,cb| h[:"on_#{cb}"] = nil; h }
+    muc = stub("Jabber::MUC::SimpleMUCClient", cbs.merge(:join => nil))
+    muc
+  end
   let(:muc_client) { MUCClient.new("Room", bot) { } }
   context "initializer" do
     subject { muc_client }
@@ -25,17 +31,26 @@ describe Botfly::MUCClient do
   end
 
   describe "#execute" do
-    it "should connect before running"
-    it "should execute block"
+    it "should connect before running" do
+      muc_client.should_receive(:connect).ordered
+      muc_client.should_receive(:instance_eval).ordered
+      muc_client.as("foo") {}
+    end
+    it "should execute block" do
+      block = lambda { raise "Ran" }
+      expect { muc_client.send(:execute, &block) }.to raise_error "Ran"
+    end
+
   end
 
   describe "#connect" do
-    it "should create an xmpp4r MUC Client"
-    it "should register for callbacks"
-    it "should compose a jid"
-    it "should record connected_at time"
-    it "should join the room as jid"
-    it "should complete all steps in order"
+    let(:muc_client) { MUCClient.new("Room", bot) }  
+    after(:each) { muc_client.send(:connect) }
+    it "should complete all steps in order" do
+      Jabber::MUC::SimpleMUCClient.should_receive(:new).ordered.and_return(muc)
+      muc_client.should_receive(:register_for_callbacks).ordered
+      muc.should_receive(:join).ordered
+    end
   end
 
   describe "#as" do
@@ -57,19 +72,24 @@ describe Botfly::MUCClient do
   end
 
   describe "#respond_to" do
-    it "shouldn't respond old messages"
-    it "should respond to regular messages"
+    it "should respond to with appropriate responder" do
+      muc_client.responders[:foo] = [stub("responder", :callback_with => nil)]
+      muc_client.send(:respond_to, :foo)
+    end
+    it "should tell xmpp4r not to send history" do
+      muc.should_receive(:join).with(anything, nil, hash_including(:history => false))
+      Jabber::MUC::SimpleMUCClient.stub(:new).and_return(muc)
+      muc_client.send(:connect)
+    end
   end
 
   describe "#register_for_callbacks" do
-    #let(:bot) { Bot.new('jid', 'pass') }
-    #before(:each) { stub_jabber_client }
-    let(:muc) { pending "Stub class and assign MUC" }
     it "should register calls for each callback" do
-      [:join, :leave, :message, :room_message, :self_leaeve, :subject].each do |type|
+      Jabber::MUC::SimpleMUCClient.stub(:new).and_return(muc)
+      [:join, :leave, :message, :room_message, :self_leave, :subject].each do |type|
         muc.should_receive(:"on_#{type}")
       end
-      muc.send(:register_for_callbacks)
+      muc_client.send(:register_for_callbacks)
     end
   end
 end
