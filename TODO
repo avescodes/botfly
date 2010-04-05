@@ -1,12 +1,35 @@
 Botfly Todo List (by priority)
 ==============================
+* Have Bot.new and Bot#run instead of just #login that always runs
 * Replace CommonBlockAcceptor responder chain array with ResponderChain object
 ** Spec & create ResponderChain class
 ** Have responder chain stop call first responder ONLY after reaching a match
 ** Additionally provide DSL for on... chain to give priority to responders (that is to say one can specify which responders fire first)
 * Finish speccing matchers, responders
 * More robust instance methods on responders (i.e. provide access to variables through methods and not ivars)
+    -> In fact, the base Responder class should, for each parameter, set up a set of default instance methods for each parameter (since, largely, these parameters are standard across their names)
+       This will DRY up the "setup_instance_variables" as that paradigm performs horribly in flog and other stats
 * Additional matchers on single and multi-user chat (not sure what, but doesn't feel complete)
 * Add configure method to accept list of configuration paramaters.
 * Support any of a bevy of features provided by xmpp4r
 
+
+Unsorted
+========
+* Some sort of xmpp4r mock/helper to more easily test external services
+    I'm imagining skipping most of the xml junk that goes on internally in xmpp4r. Something maybe like this:
+
+    it "should reply 'yo!' to any message" do
+    
+      bot = Botfly.new("doesn't", "matter") do
+        on.message do
+          reply "yo!"
+        end
+        on.subscription_request { accept }
+      end
+      
+      bot.should 
+        receive(:message, :from => 'jim@someserver.com/home', :message => "Hi!").
+        then reply_with "yo!"
+        # A full range of starting custom matchers (get, be_added_by, something, etc.) and set of response matcher
+    end
