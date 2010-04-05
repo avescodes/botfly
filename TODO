@@ -1,0 +1,12 @@
+Botfly Todo List (by priority)
+==============================
+* Replace CommonBlockAcceptor responder chain array with ResponderChain object
+** Spec & create ResponderChain class
+** Have responder chain stop call first responder ONLY after reaching a match
+** Additionally provide DSL for on... chain to give priority to responders (that is to say one can specify which responders fire first)
+* Finish speccing matchers, responders
+* More robust instance methods on responders (i.e. provide access to variables through methods and not ivars)
+* Additional matchers on single and multi-user chat (not sure what, but doesn't feel complete)
+* Add configure method to accept list of configuration paramaters.
+* Support any of a bevy of features provided by xmpp4r
+
