@@ -10,7 +10,7 @@ module Botfly
       msg = Jabber::Message.new(nick, message)
       msg.type    = opts[:type]
       msg.subject = opts[:subject]
-      @client.send(msg)
+      client.send(msg)
     end
     
     def remove(responder_id)
