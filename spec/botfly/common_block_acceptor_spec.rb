@@ -56,7 +56,12 @@ describe CommonBlockAcceptor do
       FooResponder.should_receive(:new)
       on.foo
     end
-
+    
+    it "should turn snake_case into CamelCase" do
+      FooBarResponder.should_receive(:new)
+      on.foo_bar
+    end
+    
     it "should add class prefix to front of responder class" do
       acceptor.stub(:class_prefix).and_return('Foo')
       Botfly.should_receive(:const_get).with('FooBarResponder').and_return(FooBarResponder)
