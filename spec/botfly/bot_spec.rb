@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 include Botfly
 describe Botfly::Bot do
@@ -29,13 +29,15 @@ describe Botfly::Bot do
   end
 
   describe "#register_for_callbacks" do
-    let(:bot) { Bot.new('jid', 'pass') }
-    before(:each) { stub_jabber_client }
+    subject { Bot.new('jid', 'pass') }
+    before(:each) { stub_jabber_client; }
+    after(:each)  { subject.send(:register_for_callbacks)}
     it "should register calls for each callback" do
-      bot.roster.should_receive :add_subscription_request_callback
-      bot.client.should_receive :add_presence_callback
-      bot.client.should_receive :add_message_callback
-      bot.send(:register_for_callbacks)
+      subject.instance_variable_set(:"@roster", mock("roster")) # I would prefer to do this elsewhere
+      subject.roster.should_receive :add_subscription_request_callback
+      subject.client.should_receive :add_presence_callback
+      subject.client.should_receive :add_message_callback
+
     end
   end
 

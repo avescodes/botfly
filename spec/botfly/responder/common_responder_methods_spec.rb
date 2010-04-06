@@ -20,16 +20,18 @@ describe CommonResponderMethods do
     before(:each) do
       responder.bot.stub_chain(:jid,:domain => 'foo.com')
     end
-    after( :each) { responder.send ('bar', "message")}
+    after(:each) { responder.send('foo@bar.baz/home', "message") }
     subject { responder }
+    
     it "should pass the message along to the bot's jabber client" do
-      responder.client.should_receive :send
+      responder.client.should_receive(:send).with(an_instance_of(Jabber::Message))
     end
-    it "should pass the string given as a the message's body" do
-      pending
-    end
-    it "should pass the nickname given as the message's destination" do
-      pending
+
+    it "should set the nickname and body appropriately in the message" do
+      responder.client.should_receive(:send) do |msg|
+        msg.to.to_s.should == 'foo@bar.baz/home'
+        msg.body.should == 'message'
+      end
     end
   end
 end
