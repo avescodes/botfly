@@ -47,7 +47,7 @@ describe CommonBlockAcceptor do
   context "::OnRecognizer" do
     let(:acceptor) { CommonBlockAcceptor.new }
     let(:on) { acceptor.on } 
-    before(:each) do
+    before(:all) do
       class FooResponder; def initialize(bar); end; end
       class FooBarResponder; def initialize(baz);end; end
     end

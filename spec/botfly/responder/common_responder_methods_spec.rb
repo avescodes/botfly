@@ -20,7 +20,7 @@ describe CommonResponderMethods do
     before(:each) do
       responder.bot.stub_chain(:jid,:domain => 'foo.com')
     end
-    after(:each) { responder.send('foo@bar.baz/home', "message") }
+    after(:each) { responder.tell('foo@bar.baz/home', "message") }
     subject { responder }
     
     it "should pass the message along to the bot's jabber client" do

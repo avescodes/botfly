@@ -46,11 +46,11 @@ module Botfly
     def callback_with(params)
       Botfly.logger.debug("RSP: Launching callback with params: #{params.inspect}")
 
-      setup_instance_variables(params)
+      context = callback_context(params)
       if @matcher_chain.all? {|matcher| matcher.match(params) }
         Botfly.logger.debug("RSP: All matchers passed")
         cb = @callback # Ruby makes it difficult to apply & to an instance variable
-        instance_eval &cb
+        context.instance_eval &cb
       end
     end
 
@@ -64,8 +64,8 @@ module Botfly
       Botfly.logger.debug("RSP: Adding to matcher chain: #{@matcher_chain.inspect}")
     end
 
-    def setup_instance_variables(params)
-      raise "AbstractMethodError: You must implement this method in a concrete subclass"
+    def callback_context(params)
+      Botfly::CallbackContext.new(self, params)
     end
   end
 end

@@ -1,4 +1,3 @@
-# TODO: Dry this up
 require 'botfly/responder/common_responder_methods'
 require 'botfly/responder/responder'
 require 'botfly/responder/message_responder'

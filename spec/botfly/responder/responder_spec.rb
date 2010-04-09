@@ -18,8 +18,6 @@ describe Botfly::Responder do
     end
   end
 
-  it "should include CommonResponderMethods?"
-
   context "instance" do
     let(:bot) { mock "bot" }
     subject { Responder.new(bot) }
@@ -34,6 +32,7 @@ describe Botfly::Responder do
     it "should provide attr_reader for @bot" do
       subject.bot.should be bot
     end
+    it { should be_a CommonResponderMethods }
   end
 
   describe "#method_missing" do
@@ -52,17 +51,33 @@ describe Botfly::Responder do
   end
 
   describe "#add_matcher" do
+    subject { Responder.new(mock("bot")) }
+    before(:all) { class FooBarMatcher; def initialize(*args); end; end }
+    it "should map matcher name to proper class" do
+      FooBarMatcher.should_receive(:new)
+      subject.send(:add_matcher, :foo_bar, :baz)
+    end
+    it "should add instanciated matcher to matcher chain" do
+      expect { subject.send(:add_matcher, :foo_bar, :baz) }.to change { subject.instance_variable_get(:'@matcher_chain').count }.by(1)
+    end
   end
   
   describe "#callback_with" do
-    it "should create callback context"
-    it "should execute callback in created context"
+    subject { Responder.new(mock "bot") }
+    let(:params) { double "params" }
+    after(:each) { subject.callback_with(params) }
+    it "should create callback context" do
+      CallbackContext.should_receive(:new).with(subject, params)
+      subject.instance_variable_set(:"@callback", Proc.new {} )
+    end
+    it "should execute callback in created context" do
+      context = mock("Context", :foo => :bar)
+      CallbackContext.should_receive(:new).and_return(context)
+      context.should_receive(:instance_eval)
+    end
   end
   
-  describe "#create_callback_context" do
-    it "should return an anonymous class"
-    it "should set up instance methods on that class to give access to callback parameters"
-    it "should send non-instance method calls back to the responder"
+  describe "#callback_context" do
+    specify { Responder.new(mock("bot")).send(:callback_context, :foo).should be_a CallbackContext }
   end
-
 end
