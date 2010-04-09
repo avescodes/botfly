@@ -78,6 +78,6 @@ describe Botfly::Responder do
   end
   
   describe "#callback_context" do
-    specify { Responder.new(mock("bot")).send(:callback_context, :foo).should be_a CallbackContext }
+    specify { Responder.new(mock("bot")).send(:callback_context, {}).should be_a CallbackContext }
   end
 end

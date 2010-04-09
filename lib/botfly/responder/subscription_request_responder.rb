@@ -1,13 +1,6 @@
 module Botfly
   class SubscriptionRequestResponder < Responder    
-    extend Forwardable
-    def setup_instance_variables(params)
-      Botfly.logger.debug("    RSP: SubscriptionRequestResponder setting up instance variables")
-      @roster_item = params[:roster_item]
-      @presence = params[:presence]
-      @from = @presence.from
-    end
-    
+    extend Forwardable    
     def accept
       @bot.roster.accept_subscription(@from)
     end

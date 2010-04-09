@@ -50,7 +50,7 @@ module Botfly
       end
 
       @client.add_presence_callback do |new_presence,old_presence|
-        respond_to(:preesence, :old => old_presence, :new => new_presence)
+        respond_to(:preesence, :old_presence => old_presence, :presence => new_presence)
       end
 
     end
