@@ -1,6 +1,7 @@
 Botfly Todo List (by priority)
 ==============================
 * Have Bot.new and Bot#run instead of just #login that always runs
+* Write cucumber integration testes
 * Replace CommonBlockAcceptor responder chain array with ResponderChain object
 ** Spec & create ResponderChain class
 ** Have responder chain stop call first responder ONLY after reaching a match

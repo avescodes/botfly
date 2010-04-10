@@ -52,7 +52,7 @@ describe CommonBlockAcceptor do
       class FooBarResponder; def initialize(baz);end; end
     end
 
-    it "should instanciate responder based on name" do
+    it "should instanciate specialized responder based on name if class exists" do
       FooResponder.should_receive(:new)
       on.foo
     end
@@ -65,7 +65,7 @@ describe CommonBlockAcceptor do
     it "should add class prefix to front of responder class" do
       acceptor.stub(:class_prefix).and_return('Foo')
       Botfly.should_receive(:const_get).with('FooBarResponder').and_return(FooBarResponder)
-      on.bar
+      on.bar.should be_a_kind_of FooBarResponder
     end
       
     it "should add responder to object's responder chain hash" do
@@ -79,6 +79,17 @@ describe CommonBlockAcceptor do
     it "should return the responder itself" do
       FooResponder.stub(:new).and_return(:foo_instance)
       on.foo.should be :foo_instance
+    end
+    
+    it "should default to Responder for basic responder" do
+      Responder.stub(:new).and_return(:plain)
+      on.baz.should be :plain
+    end
+    
+    it "should still add class prefix even if special responder not found" do
+      acceptor.stub(:class_prefix).and_return('Foo')
+      FooResponder.stub(:new).and_return(:plain)
+      on.baz.should be :plain
     end
   end
 end

@@ -34,11 +34,25 @@ module Botfly
       def initialize(obj); @obj = obj; end
 
       def method_missing(name,&block)
+        @type = name
         Botfly.logger.info("#{@obj.to_debug_s}: Bot#on")
-        klass = Botfly.const_get(@obj.class_prefix + name.to_s.split('_').map(&:capitalize).join + "Responder")
+        
         (@obj.responders[name] ||= []) << responder = klass.new(@obj, &block)
         Botfly.logger.info("#{@obj.to_debug_s}: #{@obj.class_prefix}#{name.to_s.capitalize}Responder added to responder chain")
         return responder
+      end
+      
+      private
+      def klass
+        begin
+          klass = Botfly.const_get(@obj.class_prefix + @type.to_s.split('_').map(&:capitalize).join + "Responder")
+        rescue
+          if @obj.class_prefix.empty?
+            klass = Responder
+          else
+            klass = Botfly.const_get(@obj.class_prefix+"Responder")
+          end
+        end
       end
     end
     
