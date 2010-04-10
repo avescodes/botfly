@@ -45,7 +45,7 @@ module Botfly
       @muc = Jabber::MUC::SimpleMUCClient.new(@bot.client)
       register_for_callbacks
       @jid = Jabber::JID.new("#{@room}@#{@domain}/#{@resource}")
-      @muc.join(@jid, nil, :history => false)
+      @muc.join(@jid,nil)#@muc.join(@jid, nil, :history => false)
       Botfly.logger.info("MUC: Done connecting")
     end
 
