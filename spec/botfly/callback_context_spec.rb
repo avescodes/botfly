@@ -29,6 +29,15 @@ describe CallbackContext do
     end
   end
   context "private setup method" do
+    let(:presence) do
+      mock("Presence", :from => :from, :show => :show, :priority => :priority,
+        :status => :status, :type => :type)
+    end
+    let(:message) do
+      mock("Message", :body => :body, :to => :to, :from => :from, 
+        :chat_state => :chat_state, :type => :type, :subject => subject) 
+    end
+    let(:roster_item) {}
     describe "#setup_roster_item" do
       subject { CallbackContext.new(caller,params) }
       it { subject.respond_to?(:setup_roster_item, true).should be true }
@@ -41,21 +50,26 @@ describe CallbackContext do
       subject { CallbackContext.new(caller,params) }
       it { subject.respond_to?(:setup_message, true).should be true }
       it "should set up instance methods for supplied values" do
-        message = mock("Message", :to => :to, :from => :from, :chat_state => :chat_state, :type => :type, :subject => subject)
-        subject.send(:setup_message, :foo)
+        subject.send(:setup_message, message)
         subject.message.should be message
-        subject.to.should be :to
-        subject.from.should be :form
-        subject.chat_state.should be :chat_stae
-        subect.type.should be :typed
+        subject.body.should be message.body
+        subject.to.should be message.to
+        subject.from.should be message.from
+        subject.chat_state.should be message.chat_state
+        subject.type.should be message.type
       end
     end
     describe "#setup_presence" do
       subject { CallbackContext.new(caller,params) }
       it { subject.respond_to?(:setup_presence, true).should be true }
       it "should set up instance methods for supplied values" do
-        subject.send(:setup_roster_item, :foo)
-
+        subject.send(:setup_presence, presence)
+        subject.presence.presence.should be :presence
+        subject.from.should be :from
+        subject.show.should be :show
+        subject.priority.should be :priority
+        subject.status.should be :status
+        subject.type.should be :type
       end
     end
     describe "#setup_old_presence" do
@@ -78,16 +92,17 @@ describe CallbackContext do
       subject { CallbackContext.new(caller,params) }
       it { subject.respond_to?(:setup_nick, true).should be true }
       it "should set up instance methods for supplied values" do
-        subject.send(:setup_roster_item, :foo)
-        subject.roster_item.should be :foo
+        subject.send(:setup_nick, :foo)
+        subject.nick.should be :foo
       end
     end
     describe "#setup_text" do
       subject { CallbackContext.new(caller,params) }
       it { subject.respond_to?(:setup_text, true).should be true }
       it "should set up instance methods for supplied values" do
-        subject.send(:setup_roster_item, :foo)
-        subject.roster_item.should be :foo
+        subject.send(:setup_text, :foo)
+        subject.text.should be :foo
+        subject.body.should be :foo
       end
     end
   end

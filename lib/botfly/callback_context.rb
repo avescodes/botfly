@@ -40,6 +40,6 @@ module Botfly
     def setup_old_presence(presence); setup_presence(presence, 'old_') end
     def setup_time(time); expose(:time, time) end
     def setup_nick(nick); expose(:from, nick); end
-    def setup_text(text); expose(:body, text); end
+    def setup_text(text); expose(:text, text); expose(:body, text); end
   end
 end
