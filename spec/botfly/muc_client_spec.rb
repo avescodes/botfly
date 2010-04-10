@@ -77,6 +77,7 @@ describe Botfly::MUCClient do
       muc_client.send(:respond_to, :foo)
     end
     it "should tell xmpp4r not to send history" do
+      pending "inclusion of history option into xmpp4r"
       muc.should_receive(:join).with(anything, nil, hash_including(:history => false))
       Jabber::MUC::SimpleMUCClient.stub(:new).and_return(muc)
       muc_client.send(:connect)

@@ -71,7 +71,7 @@ describe CallbackContext do
       it { subject.respond_to?(:setup_presence, true).should be true }
       it "should set up instance methods for supplied values" do
         subject.send(:setup_presence, presence)
-        subject.presence.should be :presence
+        subject.presence.should be presence
         subject.from.should be :from
         subject.show.should be :show
         subject.priority.should be :priority
@@ -85,7 +85,7 @@ describe CallbackContext do
       it { subject.respond_to?(:setup_old_presence, true).should be true }
       it "should set up instance methods for supplied values" do
         subject.send(:setup_old_presence, presence)
-        subject.old_presence.should be :presence
+        subject.old_presence.should be presence
         subject.old_from.should be :from
         subject.old_show.should be :show
         subject.old_priority.should be :priority
