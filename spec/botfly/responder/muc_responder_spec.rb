@@ -2,5 +2,5 @@ require 'spec_helper'
 
 include Botfly
 describe Botfly::MUCResponder do
-  it "should be tested"
+  subject { MUCResponder.new mock("muc", :bot => mock("bot")) }
 end
